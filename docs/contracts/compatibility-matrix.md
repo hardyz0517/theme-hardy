@@ -8,10 +8,10 @@ untested claim until the minimum supported Halo line has been rendered with the 
 
 ## Version Matrix
 
-| Halo version | Evidence                                                                                                                                                          | Result                                                                                                                                                        | Status                                  |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| 2.0.0        | Lower bound declared in `theme.yaml`; no 2.0.0 instance is available in this workspace.                                                                           | No conclusion about template variables, Finder methods, or extension points.                                                                                  | **Untested / support decision pending** |
-| 2.25.4       | Public response from `https://hardyzheng.com/` on 2026-08-06 contains `<meta name="generator" content="Halo 2.25.4">` and loads `/themes/theme-hardy/assets/...`. | Public smoke responses are available for `/`, `/archives`, `/categories`, `/tags`, `/about`, `/archives/hello-halo`, `/categories/default`, and `/tags/halo`. | **Observed; full matrix pending**       |
+| Halo version | Evidence                                                                                                                                                                                                                                                                                                                                                                  | Result                                                                                                                                                                                    | Status                                              |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| 2.0.0        | Official v2.0.0 source was built locally on 2026-08-07 with Temurin JDK 17.0.20. A clean H2 file instance on port 8092 installed the generated ZIP variant (with legacy `website`/`require` metadata aliases) and rendered `/`, `/archives/`, `/categories/`, and `/tags/` with HTTP 200. `/about` returned 404 because the temporary database has no SinglePage fixture. | Theme installation, metadata parsing, and the empty core list templates are observed. Post, SinglePage, author, pagination, plugin, and full browser matrices remain unexecuted on 2.0.0. | **Partial evidence; full support decision pending** |
+| 2.25.4       | Public response from `https://hardyzheng.com/` on 2026-08-07 contains `<meta name="generator" content="Halo 2.25.4">` and loads `/themes/theme-hardy/assets/...`.                                                                                                                                                                                                         | Public smoke responses are available for core routes, the current published post, and the enabled `/links`, `/moments`, and `/photos` routes.                                             | **Observed; full matrix pending**                   |
 
 The latest release reference is [Halo v2.25.4](https://github.com/halo-dev/halo/releases/tag/v2.25.4),
 checked on 2026-08-06. The public response is strong evidence of the running version and active
@@ -23,23 +23,34 @@ The following observations were made without modifying the remote site:
 
 | Check                   | Observation                                                                                                                                                                   |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Active theme            | HTML references `/themes/theme-hardy/assets/main-Cs7Bgyp_.js` and `main-BM-zCBcm.css`.                                                                                        |
-| Core routes             | `/`, `/archives/`, `/categories/`, `/tags/`, `/about`, `/archives/hello-halo`, `/categories/default`, and `/tags/halo` returned HTTP 200 with HTML.                           |
-| Known missing routes    | `/authors/`, `/moments/`, `/links/`, `/photos/`, and `/search/` returned HTTP 404. `/authors/` is only an index probe; the contract route is `/authors/:name`.                |
+| Active theme            | HTML references the current `/themes/theme-hardy/assets/main-DVNQPdWL.js` and `main-BzF5IOY-.css` bundles.                                                                    |
+| Core routes             | `/`, `/archives/`, `/categories/`, `/tags/`, `/about`, the current published post route, `/categories/default`, and `/tags/halo` returned HTTP 200 with HTML.                 |
+| Known missing routes    | `/authors/` and `/search/` returned HTTP 404. `/authors/` is only an index probe; the contract route is `/authors/:name`. Optional plugin routes are tested separately.       |
 | Theme mode              | `<html data-color-scheme="auto">` and Hardy's configured-mode attribute are present in public HTML.                                                                           |
 | Comment extension       | The post response contains a Comment Widget host with `group: "content.halo.run"`, `kind: "Post"`, and a post resource name. The page response contains `kind: "SinglePage"`. |
 | Installed plugin assets | `PluginCommentWidget` 3.1.2, `PluginSearchWidget` 1.7.1, `shiki` 1.4.2, `editor-hyperlink-card` 1.9.1, and `plugin-katex` 3.0.0 are injected by the public pages.             |
 | Health endpoint         | `/actuator/health` returned `{"status":"UP"}`. It does not expose Java, database, or server configuration.                                                                    |
 
+## Halo 2.0 Finder Parity Probe
+
+The official v2.0.0 source build also exposes every core Finder method consumed by Hardy's
+templates: `menuFinder.getPrimary()`, `pluginFinder.available(String)`, `postFinder.cursor(String)`,
+the category/tag list methods, `postFinder.archives(...)`, and the `SinglePageFinder` list/content
+methods. The v2.0 `PostFinder`, `MenuFinder`, `PluginFinder`, `CategoryFinder`, `TagFinder`, and
+`SinglePageFinder` interfaces were read directly from the pinned source build. This confirms API
+symbol parity, but not populated-data rendering or plugin extension behavior; those remain outside
+the partial 2.0 runtime result above.
+
 No author permalink was present in the current sitemap, so the parameterized author route
-remains unexecuted. No claim is made for the 404 optional routes; they are deferred plugin
-surfaces, not core-theme failures.
+remains unexecuted. `/search/` is a modal integration rather than a Hardy-owned route. No claim
+is made for absent/uninstalled optional-plugin states.
 
 ## Local Environment Audit
 
-On 2026-08-06 this workspace had Node.js 24.18.0 and pnpm 10.33.0. `java` and `docker` are
-not installed, so a local Halo/Compose compatibility run cannot be provisioned here. The
-remote instance is user-managed and is therefore the current runtime target.
+On 2026-08-07 this workspace had Node.js 24.18.0 and pnpm 10.33.0. The repository does not
+ship Java or Docker, so the Halo 2.0.0 audit used a temporary official source build, Temurin
+JDK 17.0.20, and an H2 file database outside the repository. The public runtime target remains
+the user-managed Halo 2.25.4 instance.
 
 ## Static Build Baseline
 

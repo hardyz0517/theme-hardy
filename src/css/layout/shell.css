@@ -19,6 +19,86 @@
   transition: transform var(--hardy-duration-base) var(--hardy-ease-standard);
 }
 
+html.is-page-leaving body {
+  animation: hardy-page-leave 220ms var(--hardy-ease-standard) both;
+  pointer-events: none;
+}
+
+@keyframes hardy-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hardy-fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hardy-page-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.hardy-sidebar__tools,
+.hardy-brand__avatar,
+.hardy-brand__title,
+.hardy-brand__subtitle,
+.hardy-socials,
+.hardy-nav,
+.hardy-mobile-header > *,
+.hardy-page-heading,
+.hardy-moments-heading,
+.hardy-moments-tags,
+.hardy-moment-card,
+.hardy-photos-groups,
+.hardy-empty-state,
+.hardy-pagination,
+.hardy-taxonomy-list__item,
+.hardy-archive-year__title,
+.hardy-archive-post__link,
+.hardy-archive-post__date {
+  animation: hardy-fade-in 1s both;
+}
+
+.hardy-brand__title {
+  animation-delay: 100ms;
+}
+
+.hardy-brand__subtitle,
+.hardy-moments-tags,
+.hardy-archive-year__title {
+  animation-delay: 200ms;
+}
+
+.hardy-socials,
+.hardy-archive-post__link {
+  animation-delay: 300ms;
+}
+
+.hardy-nav,
+.hardy-archive-post__date {
+  animation-name: hardy-fade-in-down;
+  animation-delay: 400ms;
+}
+
 .is-menu-open .hardy-page {
   transform: translateX(32px);
 }
@@ -62,6 +142,24 @@
   background: color-mix(in srgb, var(--hardy-color-text) 6%, transparent);
 }
 
+[data-hardy-color-scheme-toggle] [data-hardy-color-scheme-icon] {
+  display: none;
+}
+
+[data-hardy-color-scheme-toggle][data-hardy-color-scheme-value="auto"]
+  [data-hardy-color-scheme-icon="auto"],
+[data-hardy-color-scheme-toggle][data-hardy-color-scheme-value="light"]
+  [data-hardy-color-scheme-icon="light"],
+[data-hardy-color-scheme-toggle][data-hardy-color-scheme-value="dark"]
+  [data-hardy-color-scheme-icon="dark"] {
+  display: inline-grid;
+}
+
+[data-hardy-color-scheme-icon="auto"] [data-hardy-color-scheme-auto-fill] {
+  fill: currentColor;
+  stroke: none;
+}
+
 .hardy-scroll-top {
   position: fixed;
   inset-inline-end: var(--hardy-space-5);
@@ -89,16 +187,14 @@
 
   .hardy-shell {
     display: grid;
-    grid-template-columns: minmax(240px, var(--hardy-sidebar-width)) minmax(
-        0,
-        var(--hardy-content-width)
-      );
+    grid-template-columns: var(--hardy-sidebar-width) minmax(0, var(--hardy-content-width));
     gap: 0;
-    padding: 116px var(--hardy-space-8) 0;
+    padding: 28px 24px 0;
   }
 
   .hardy-content {
-    max-width: var(--hardy-content-measure);
+    width: 100%;
+    max-width: none;
     padding: 0 var(--hardy-space-8);
   }
 

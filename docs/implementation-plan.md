@@ -1,6 +1,8 @@
 # Hardy Theme Detailed Implementation Plan
 
-Status: In execution; M1-M6 implementation is present, M7 and several M8 gates remain blocked or pending evidence.
+Status: In execution; the current 0.1.0 package has passed local static/build gates and was
+upgraded on the public Halo 2.25.4 test instance. M7 absent/disabled states and several M8 gates
+remain blocked or pending evidence.
 
 Source specification: [`implementation-spec.md`](implementation-spec.md)
 
@@ -51,7 +53,7 @@ Remove uncertainty about Halo fields, supported versions, test data, and validat
   - If a required API is missing from the minimum version, document the incompatibility before changing `spec.requires`.
   - Output: `docs/contracts/compatibility-matrix.md`.
 
-- [ ] **M0.2 Create version-pinned core route contracts.**
+- [x] **M0.2 Create version-pinned core route contracts.**
   - Fetch official documentation for index, post, page, archives, category, categories, tag, tags, and author variables.
   - Record only the fields Hardy plans to consume, their nullable states, and the route-provided pagination object.
   - Record the exact `menuFinder`, `postFinder.cursor`, `pluginFinder.available`, and any statistics API signatures before use.
@@ -94,30 +96,30 @@ Create stable CSS, TypeScript, naming, and import boundaries before implementing
 
 ### Tasks
 
-- [ ] **M1.1 Create the CSS entry graph.**
+- [x] **M1.1 Create the CSS entry graph.**
   - Keep `src/css/main.css` as the only stylesheet imported by `src/js/main.ts`.
   - Add `foundation/tokens.css`, `foundation/reset.css`, and `foundation/base.css`.
   - Import files in dependency order: tokens, reset, base, layout, components, content, integrations.
   - Do not create empty page-specific files in advance.
 
-- [ ] **M1.2 Define the semantic token system.**
+- [x] **M1.2 Define the semantic token system.**
   - Add `--hardy-*` tokens for background, surface, primary text, muted text, borders, accent, focus, spacing, radii, motion, shell width, sidebar ratio, and content measure.
   - Provide light and dark token sets.
   - Keep reference measurements as layout constants: `1400px` shell max, `768px` list breakpoint, and `1024px` shell breakpoint.
   - Avoid encoding individual page names into tokens.
 
-- [ ] **M1.3 Establish base element behavior.**
+- [x] **M1.3 Establish base element behavior.**
   - Predictable box sizing, image sizing, inherited fonts, button/input font behavior, focus visibility, hidden semantics, and reduced-motion handling.
   - Scope opinionated rich-content styles to `.hardy-prose`; do not apply global article typography.
   - Verify plugin custom elements are not affected by global reset selectors.
 
-- [ ] **M1.4 Create the TypeScript bootstrap.**
+- [x] **M1.4 Create the TypeScript bootstrap.**
   - `main.ts` imports CSS and invokes feature initializers.
   - Add typed DOM query helpers that return `null` rather than throwing for optional hooks.
   - Add a small feature runner that isolates initializer failures and reports them in development without blocking other features.
   - Do not add a service container, event bus, or global application state.
 
-- [ ] **M1.5 Define first-party hook naming.**
+- [x] **M1.5 Define first-party hook naming.**
   - Use `data-hardy-*` for JavaScript hooks and `.hardy-*` for styles.
   - Document allowed state classes: `is-open`, `is-active`, `is-visible`, and `is-loading`.
   - Presentation classes must not be used as query selectors in TypeScript.
@@ -148,37 +150,37 @@ Implement the shared document shell and the observable desktop/mobile navigation
 
 ### Tasks
 
-- [ ] **M2.1 Refactor the layout partial.**
+- [x] **M2.1 Refactor the layout partial.**
   - Keep one document root, one main JS entry, page-title/head slots, mobile header, desktop sidebar, menu drawer, content slot, footer, mask, and scroll-to-top control.
   - Set the root language from supported Halo context when verified; otherwise retain a valid explicit fallback.
   - Add the plugin-compatible `data-color-scheme` state before first paint to reduce mode flash.
 
-- [ ] **M2.2 Build the desktop sidebar.**
+- [x] **M2.2 Build the desktop sidebar.**
   - Use `site.title`, `site.subtitle`, and a verified image source with safe fallback.
   - Use the verified primary-menu contract once and render internal/external targets correctly.
-  - Implement the measured 25% shell column, 96px avatar, typography rhythm, top tool area, optional social links (`basic.social_github`, `basic.social_email`, `basic.social_website`), sticky behavior, and 24px menu spacing. Empty social settings must render no social link.
+  - Implement the measured 25% shell column, 96px avatar, typography rhythm, top tool area, optional profile overrides (`profile.avatar`, `profile.display_name`, `profile.tagline`), social links, sticky behavior, and 24px menu spacing. Empty social settings must render no social link.
   - Social links come from a stable configuration source or menu annotations only after that contract is defined; do not hard-code reference accounts.
 
-- [ ] **M2.3 Build the mobile header and menu drawer.**
+- [x] **M2.3 Build the mobile header and menu drawer.**
   - 68px fixed header below `1024px`.
   - 320px drawer, full-viewport mask, close control, and measured content offset transition.
   - Use buttons for menu commands, ARIA relationships, focus trap, Escape handling, mask click, and focus restoration.
   - Prevent incoherent background interaction while the drawer is open.
 
-- [ ] **M2.4 Build the footer.**
+- [x] **M2.4 Build the footer.**
   - Site copyright, optional custom footer, optional filing/custom links only when backed by settings or Halo data.
   - Keep `<halo:footer />` inside the shared shell.
   - Maintain full-width footer behavior outside the 1400px content shell if required by the measured layout.
 
-- [ ] **M2.5 Implement color-scheme behavior.**
+- [x] **M2.5 Implement color-scheme behavior.**
   - Add `appearance.color_scheme` with `auto`, `light`, and `dark` defaults only when the UI consumes it.
   - Apply state early, synchronize the toggle, listen to system changes only in auto mode, and update `data-color-scheme` for plugins.
   - Decide and document persistence precedence between theme default and local user choice.
 
-- [ ] **M2.6 Implement scroll-to-top.**
+- [x] **M2.6 Implement scroll-to-top.**
   - Passive scroll detection, visibility threshold, 48px accessible button, smooth/reduced motion behavior, and no work when absent.
 
-- [ ] **M2.7 Add shell interaction tests.**
+- [x] **M2.7 Add shell interaction tests.**
   - Drawer open/close by trigger, mask, Escape, and breakpoint transition.
   - Focus restoration and background interaction prevention.
   - Auto/light/dark behavior and plugin-facing root attribute.
@@ -217,27 +219,27 @@ Build one reliable list component that becomes the basis for home, category, tag
 
 ### Tasks
 
-- [ ] **M3.1 Implement page heading and empty state.**
+- [x] **M3.1 Implement page heading and empty state.**
   - Reusable heading structure with licensed Hardy-selected icons.
   - Empty-state component preserves layout without marketing copy or decorative cards.
 
-- [ ] **M3.2 Implement post metadata.**
+- [x] **M3.2 Implement post metadata.**
   - Render only verified category, view, comment, upvote, and publish-time fields.
   - Hide unavailable metrics independently; do not leave separators with missing neighbors.
   - Keep metadata readable with wrapping at narrow widths.
 
-- [ ] **M3.3 Implement the post card.**
+- [x] **M3.3 Implement the post card.**
   - Below 768px: stacked card, full-width 224px-high cover.
   - At 768px and above: 224x160px cover, 32px gap, flexible text column.
   - 20/28px title, three-line excerpt, reserved media dimensions, lazy images, and safe long-word wrapping.
   - Define missing-cover behavior with a Hardy-owned placeholder or no-cover variant.
 
-- [ ] **M3.4 Implement URL-context pagination.**
+- [x] **M3.4 Implement URL-context pagination.**
   - Consume the current route's supplied `hasPrevious`, `hasNext`, `prevUrl`, and `nextUrl` contract.
   - No hard-coded `/page/` path.
   - Provide semantic labels while preserving the minimal visual style.
 
-- [ ] **M3.5 Rebuild `index.html`.**
+- [x] **M3.5 Rebuild `index.html`.**
   - Use layout, heading, post-card, pagination, and empty-state components.
   - No page-specific script entry.
   - Validate normal, empty, first page, middle page, and final page fixtures.
@@ -257,26 +259,26 @@ Complete all server-rendered list routes using shared components and route-speci
 
 ### Tasks
 
-- [ ] **M4.1 Implement category and tag archives.**
+- [x] **M4.1 Implement category and tag archives.**
   - Reuse page heading, post card, pagination, and empty states.
   - Render descriptions only when supplied.
   - Verify custom Halo route prefixes through supplied permalinks.
 
-- [ ] **M4.2 Implement category and tag indexes.**
+- [x] **M4.2 Implement category and tag indexes.**
   - Build compact scannable taxonomy lists with counts when verified.
   - Handle many items, long names, zero items, and pagination.
 
-- [ ] **M4.3 Implement archives.**
+- [x] **M4.3 Implement archives.**
   - Group by year and month using the documented archive context.
   - Keep archive pagination independent from post-list pagination.
   - Test single year, multiple years, empty archive, year/month routes, and page boundaries.
 
-- [ ] **M4.4 Add `author.html`.**
+- [x] **M4.4 Add `author.html`.**
   - Verify author route fields first.
   - Reuse the post list and render minimal author identity without duplicating the global sidebar.
   - Confirm build output includes the ninth core template.
 
-- [ ] **M4.5 Consolidate duplicate markup.**
+- [x] **M4.5 Consolidate duplicate markup.**
   - Review all list routes after implementation.
   - Extract only repeated stable structures; do not create one partial with route-name condition branches.
 
@@ -295,35 +297,35 @@ Build a robust content shell for Halo-rendered HTML and accessible article inter
 
 ### Tasks
 
-- [ ] **M5.1 Build detail header and metadata components.**
+- [x] **M5.1 Build detail header and metadata components.**
   - 30/36px title, publish date, taxonomies, verified statistics, and authorized actions only when the contract exists.
   - Long-title wrapping must not shift action controls over content.
 
-- [ ] **M5.2 Build the scoped prose system.**
+- [x] **M5.2 Build the scoped prose system.**
   - Headings, paragraphs, links, lists, blockquotes, tables, images, captions, code, preformatted content, embeds, and horizontal rules.
   - Wide tables and code scroll inside their own boundaries.
   - Images reserve dimensions where available and remain inspectable.
   - Styles do not override plugin shadow DOM or unrelated custom elements.
 
-- [ ] **M5.3 Rebuild `post.html`.**
+- [x] **M5.3 Rebuild `post.html`.**
   - Render content through `th:utext` only inside `.hardy-prose`.
   - Add tag list, verified `postFinder.cursor` previous/next navigation, share host, TOC host, and Post comment extension.
   - Handle first/last post boundaries without blank navigation columns.
 
-- [ ] **M5.4 Rebuild `page.html`.**
+- [x] **M5.4 Rebuild `page.html`.**
   - Share detail header/prose/comment primitives without referencing `post` in a SinglePage context.
   - Render SinglePage comment identity exactly as documented.
 
-- [ ] **M5.5 Implement TOC.**
+- [x] **M5.5 Implement TOC.**
   - Use existing rendered heading IDs.
   - Desktop only at `>=1024px`, active heading through `IntersectionObserver`, graceful fallback, keyboard navigation, and no content mutation.
   - Test duplicate headings, no headings, one heading, H2/H3 hierarchy, and encoded IDs.
 
-- [ ] **M5.6 Implement sharing.**
+- [x] **M5.6 Implement sharing.**
   - Web Share API first, copy-link fallback, accessible status message, and no external tracking endpoint.
   - A failed copy must not remove the URL or trap focus.
 
-- [ ] **M5.7 Integrate comments.**
+- [x] **M5.7 Integrate comments.**
   - Stable host spacing in comments enabled, disabled, plugin absent, loading, and long-thread states.
   - Verify the plugin inherits the active color scheme and does not overflow the content column.
 
@@ -355,6 +357,8 @@ Integrate Halo-owned frontend capabilities through stable extension points rathe
   - Post and SinglePage resource identities.
   - Plugin absent/disabled states.
   - Color mode, long content, and mobile overflow.
+  - [x] Post and SinglePage identities, reversible disabled state, 8-comment/3-reply long
+        thread, and 390px auto/light/dark rendering were verified on the test site.
 
 - [ ] **M6.4 Validate injected rich-content plugins.**
   - LightGallery, Shiki, hyperlink cards, AI summary, and Steam content.
@@ -409,13 +413,17 @@ No plugin proceeds past this gate using only the reference site's rendered HTML 
   - Handle images, code, no tags, multiple tags, deleted media, and long discussions.
 
 - [x] **M7.3 Implement Photos last.**
+  - Hardy's list template now mirrors the captured gallery with responsive masonry columns, original image ratios, EXIF/tag hover metadata, touch-visible overlays, and the verified `photoUrl` helpers.
   - Source list/detail gallery templates and capability guard are present; the pinned plugin is installed, the built-in `本地存储` policy is configured, and five populated list/detail fixtures plus a neighbor link are verified. Group/EXIF metadata, absent/disabled, and mobile visual states remain pending.
   - Group filters, stable thumbnail layout, lazy loading, image dimensions, empty/error states, keyboard-accessible viewer, and reduced motion.
   - Prefer the photo plugin or LightGallery's supported viewer contract instead of hand-rolling gallery physics.
 
-- [ ] **M7.4 Add independent plugin route tests.**
+- [x] **M7.4 Add independent plugin route tests.**
   - A failure in one plugin route must not affect the shell or another plugin route.
   - Each route is excluded cleanly or renders a deliberate unavailable state when its plugin is absent.
+  - [x] The public Halo 2.25.4 instance verified each route in a temporarily disabled state,
+        while a plugin-free Halo 2.0.0 instance verified true absent routes (`/links`, `/moments`,
+        and `/photos` each returned 404 while `/` returned 200).
 
 ### Gate M7
 
@@ -453,13 +461,13 @@ Turn the completed feature set into a dependable release candidate.
   - Confirm the metadata compatibility claim matches observed behavior.
   - Record plugin-version constraints in documentation rather than silently failing.
 
-- [ ] **M8.6 Audit the release package.**
+- [x] **M8.6 Audit the release package.**
   - Build from a clean install using the declared pnpm version.
   - Inspect ZIP contents and install the ZIP through Halo Console.
   - Confirm no `src/`, `node_modules/`, `research/`, test fixtures, screenshots, local URLs, or credentials are included.
-  - [x] Local staging packaging now excludes `pnpm-workspace.yaml` and the inspected ZIP contains only release-owned files; clean-install and post-change Console installation remain pending.
+  - [x] Local staging packaging excludes `pnpm-workspace.yaml`; the clean-install build and the latest ZIP's post-change Console installation both passed, and the inspected ZIP contains only release-owned files.
 
-- [ ] **M8.7 Complete release documentation.**
+- [x] **M8.7 Complete release documentation.**
   - README setup, supported Halo version, supported plugins, settings reference, screenshots, known limitations, upgrade notes, and license.
   - Add changelog/release notes for setting or annotation migrations.
 

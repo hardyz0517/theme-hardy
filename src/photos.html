@@ -4,21 +4,15 @@
   </template>
 
   <th:block th:if="${pluginFinder.available('PluginPhotos')}">
-    <section class="hardy-list-page hardy-photos-page">
-      <div th:with="hardyPageEyebrow='图库',hardyPageTitle=${title ?: '图库'}">
-        <include src="components/page-heading.html"></include>
-      </div>
-
-      <nav
-        class="hardy-photos-groups"
-        aria-label="Photo groups"
-        th:if="${groups != null and !#lists.isEmpty(groups)}"
-      >
-        <a class="hardy-photos-groups__link" th:href="@{/photos}">All</a>
+    <section class="hardy-photos-page" id="photo-gallery-root">
+      <nav class="hardy-photos-groups" aria-label="Photo groups">
+        <a class="hardy-photos-groups__link is-active" th:href="@{${photoUrl.list()}}"
+          >&#x5168;&#x90E8;</a
+        >
         <a
           class="hardy-photos-groups__link"
           th:each="photoGroup : ${groups}"
-          th:href="@{/photos(group=${photoGroup.metadata.name})}"
+          th:href="@{${photoUrl.list(photoGroup.metadata.name)}}"
           th:text="${photoGroup.spec.displayName ?: photoGroup.metadata.name}"
           >Group</a
         >
@@ -31,45 +25,83 @@
         <include src="components/empty-state.html"></include>
       </div>
 
-      <ul class="hardy-photos-grid" th:if="${photos != null and !#lists.isEmpty(photos.items)}">
-        <li class="hardy-photo-card" th:each="photo : ${photos.items}">
-          <a
-            class="hardy-photo-card__link"
-            th:href="@{/photos/{name}(name=${photo.metadata.name})}"
+      <div class="hardy-photos-grid" th:if="${photos != null and !#lists.isEmpty(photos.items)}">
+        <a
+          class="hardy-photo-card"
+          th:each="photo : ${photos.items}"
+          th:href="@{${photoUrl.detail(photo)}}"
+        >
+          <span
+            class="hardy-photo-card__media"
+            th:style="${photo.exif?.imageWidth != null and photo.exif?.imageHeight != null} ? 'aspect-ratio: ' + photo.exif.imageWidth + ' / ' + photo.exif.imageHeight : null"
           >
-            <span class="hardy-photo-card__media">
-              <img
-                data-hardy-media-image
-                th:if="${photo.spec?.cover ?: photo.spec?.url}"
-                th:src="${photo.spec.cover ?: photo.spec.url}"
-                th:alt="${photo.spec.displayName ?: photo.metadata.name}"
-                loading="lazy"
-                decoding="async"
-              />
-              <span
-                class="hardy-photo-card__fallback"
-                data-hardy-media-fallback
-                aria-hidden="true"
-                hidden
-                >H</span
-              >
-            </span>
-            <span class="hardy-photo-card__body">
+            <img
+              data-hardy-media-image
+              th:if="${photo.spec?.cover ?: photo.spec?.url}"
+              th:src="${photo.spec.cover ?: photo.spec.url}"
+              th:alt="${photo.spec.displayName ?: photo.metadata.name}"
+              th:width="${photo.exif?.imageWidth}"
+              th:height="${photo.exif?.imageHeight}"
+              loading="lazy"
+              decoding="async"
+            />
+            <span
+              class="hardy-photo-card__fallback"
+              data-hardy-media-fallback
+              aria-hidden="true"
+              hidden
+              >H</span
+            >
+            <span class="hardy-photo-card__overlay">
               <span
                 class="hardy-photo-card__title"
                 th:text="${photo.spec.displayName ?: photo.metadata.name}"
                 >Photo</span
               >
+              <span class="hardy-photo-card__meta">
+                <span
+                  class="hardy-photo-card__meta-item"
+                  th:if="${photo.exif?.make ?: photo.exif?.model}"
+                >
+                  <span aria-hidden="true">&#x25C9;</span>
+                  <span th:text="${photo.exif.make ?: photo.exif.model}">Camera</span>
+                </span>
+                <span class="hardy-photo-card__meta-item" th:if="${photo.exif?.dateTimeOriginal}">
+                  <span aria-hidden="true">&#x25F7;</span>
+                  <time
+                    th:datetime="${photo.exif.dateTimeOriginal}"
+                    th:text="${#temporals.format(photo.exif.dateTimeOriginal, 'yyyy/MM/dd')}"
+                    >2026/01/01</time
+                  >
+                </span>
+                <span class="hardy-photo-card__meta-item" th:if="${photo.exif?.fNumber}">
+                  <span aria-hidden="true">&#x223F;</span>
+                  <span th:text="|f/${photo.exif.fNumber}|">f/2.8</span>
+                </span>
+                <span class="hardy-photo-card__meta-item" th:if="${photo.exif?.exposureTime}">
+                  <span aria-hidden="true">&#x25F4;</span>
+                  <span th:text="${photo.exif.exposureTime}">1/120s</span>
+                </span>
+                <span class="hardy-photo-card__meta-item" th:if="${photo.exif?.iso}">
+                  <span aria-hidden="true">&#x263C;</span>
+                  <span th:text="|ISO ${photo.exif.iso}|">ISO 100</span>
+                </span>
+              </span>
               <span
-                class="hardy-photo-card__description"
-                th:if="${photo.spec?.description}"
-                th:text="${photo.spec.description}"
-                >Description</span
+                class="hardy-photo-card__tags"
+                th:if="${photo.spec?.tags != null and !#lists.isEmpty(photo.spec.tags)}"
               >
+                <span
+                  class="hardy-photo-card__tag"
+                  th:each="tag : ${photo.spec.tags}"
+                  th:text="${tag}"
+                  >Tag</span
+                >
+              </span>
             </span>
-          </a>
-        </li>
-      </ul>
+          </span>
+        </a>
+      </div>
 
       <div th:with="hardyPagination=${photos}">
         <include src="components/pagination.html"></include>

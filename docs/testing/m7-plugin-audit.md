@@ -27,8 +27,19 @@ before implementation continues.
 The current Hardy source keeps each optional route independent: `moments.html` and
 `moment.html` guard only `PluginMoments`, while `links.html`, `photos.html`, and `photo.html`
 guard their respective plugin. When a plugin is absent, the route contributes no plugin data or
-comment host and the shared shell remains available; populated and disabled states still need a
-runtime fixture after installation.
+comment host and the shared shell remains available; populated, disabled, and absent states still
+need the complete route and visual matrix after installation.
+
+The dependency-free route smoke check now runs the core and optional routes independently:
+
+```powershell
+$env:HALO_TEST_BASE_URL = 'https://hardyzheng.com'
+pnpm test:smoke
+```
+
+On 2026-08-07 all 11 checked routes returned HTTP 200 and referenced a Hardy theme asset. The
+script reports each route separately, so a failing plugin route cannot hide a core-route result;
+it does not replace absent/disabled-plugin verification.
 
 The Halo application market was searched on 2026-08-06. It did not expose matching entries, so the
 pinned official releases were installed through Halo's remote-download form instead:
@@ -46,6 +57,22 @@ Photos was temporarily disabled through the Console to verify the absent route b
 returned Halo's 404 with no plugin template), then re-enabled. The plugin required a short startup
 delay before its switch became green and `/photos` returned 200 again; this delay is recorded as
 operational evidence, not a theme loading failure.
+
+On 2026-08-07, the same reversible check was repeated for all three optional routes after the
+current Hardy package upgrade. Disabling `PluginPhotos`, `PluginMoments`, or `PluginLinks` made its
+route return Halo's 404 while `/` continued to render the Hardy shell. Each plugin was re-enabled
+and its route returned the expected heading (`图库`, `瞬间`, or `链接`) with no frontend console
+errors. These are disabled-state results; an uninstall/absent-plugin result is still not claimed.
+
+This independent route check is partial M7.4 evidence: each optional route failed in isolation
+while the Hardy home route continued to render, and each plugin was restored before the audit
+ended.
+
+On 2026-08-07, the temporary Halo 2.0.0 compatibility instance was started with the Hardy theme
+active and no Moments, Links, or Photos plugins installed. Its core `/` route returned HTTP 200;
+`/links`, `/moments`, and `/photos` each returned HTTP 404. This is a true absent-plugin result
+and, together with the production disabled-state pass, completes the independent route-isolation
+requirement. It does not replace the still-pending per-plugin content/visual fixture matrices.
 
 On 2026-08-07, `hardy-fixture-moment` was published via the official Moments Console editor.
 The populated list route and `/moments/moment-dp1iqbqt` detail route both rendered the fixture.

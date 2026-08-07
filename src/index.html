@@ -4,13 +4,19 @@
   </template>
 
   <section class="hardy-list-page">
-    <div th:with="hardyPageTitle='最新文章'">
-      <include src="components/page-heading.html"></include>
-    </div>
+    <header class="hardy-page-heading">
+      <h1 class="hardy-page-heading__title">
+        <svg class="hardy-page-heading__icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <path d="M14 2v6h6M8 13h8M8 17h6" />
+        </svg>
+        &#x6700;&#x65B0;&#x6587;&#x7AE0;
+      </h1>
+    </header>
 
     <div
       th:if="${#lists.isEmpty(posts.items)}"
-      th:with="hardyEmptyTitle='暂无文章',hardyEmptyDescription='新的文章会显示在这里。'"
+      th:with="hardyEmptyTitle='&#x6682;&#x65E0;&#x6587;&#x7AE0;',hardyEmptyDescription='&#x65B0;&#x7684;&#x6587;&#x7AE0;&#x4F1A;&#x663E;&#x793A;&#x5728;&#x8FD9;&#x91CC;&#x3002;'"
     >
       <include src="components/empty-state.html"></include>
     </div>

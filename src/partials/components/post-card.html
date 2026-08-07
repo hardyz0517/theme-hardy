@@ -30,9 +30,6 @@
         Post title
       </a>
     </h2>
-    <div class="hardy-post-card__meta">
-      <include src="components/post-meta.html"></include>
-    </div>
     <p
       class="hardy-post-card__excerpt"
       th:if="${post.status.excerpt}"
@@ -40,5 +37,8 @@
     >
       Post excerpt.
     </p>
+    <div class="hardy-post-card__meta">
+      <include src="components/post-meta.html"></include>
+    </div>
   </div>
 </li>

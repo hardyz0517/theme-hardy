@@ -19,6 +19,9 @@
     "dev": "vp build --watch",
     "check": "vp check",
     "check:fix": "vp check --fix",
+    "test:contrast": "node scripts/check-contrast.mjs",
+    "test:hardening": "node scripts/check-hardening.mjs",
+    "test:smoke": "node scripts/smoke-routes.mjs",
     "package": "node scripts/package-theme.mjs",
     "prepare": "vp config",
     "skills:update": "npx skills update"

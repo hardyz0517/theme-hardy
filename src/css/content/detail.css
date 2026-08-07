@@ -9,10 +9,7 @@
 }
 
 .hardy-detail__eyebrow {
-  margin: 0;
-  color: var(--hardy-color-subtle);
-  font-size: 13px;
-  line-height: 1.4;
+  display: none;
 }
 
 .hardy-detail__title {
@@ -60,7 +57,36 @@
 
 .hardy-detail__meta {
   color: var(--hardy-color-muted);
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.333;
+}
+
+.hardy-detail__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hardy-detail__meta-icon {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+}
+
+.hardy-detail__meta-item::before {
+  color: currentColor;
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.hardy-detail__meta-date::before {
+  content: "";
+}
+
+.hardy-detail__meta-category:hover {
+  color: var(--hardy-color-text);
 }
 
 .hardy-detail__taxonomy {
@@ -110,8 +136,8 @@
 }
 
 @media (min-width: 1024px) {
-  .hardy-detail__title {
-    font-size: 36px;
+  .hardy-detail__meta-date {
+    margin-inline-start: auto;
   }
 
   .hardy-detail__body {

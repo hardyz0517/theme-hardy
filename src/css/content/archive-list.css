@@ -1,34 +1,24 @@
 .hardy-archive-list {
   display: grid;
-  gap: var(--hardy-space-10);
+  gap: 48px;
 }
 
 .hardy-archive-year {
   display: grid;
-  gap: var(--hardy-space-5);
+  gap: 24px;
 }
 
 .hardy-archive-year__title {
   margin: 0;
-  font-size: 24px;
-  line-height: 1.25;
-}
-
-.hardy-archive-month {
-  display: grid;
-  gap: var(--hardy-space-3);
-}
-
-.hardy-archive-month__title {
-  margin: 0;
   color: var(--hardy-color-muted);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .hardy-archive-posts {
   display: grid;
-  gap: var(--hardy-space-3);
+  gap: 24px;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -36,18 +26,18 @@
 
 .hardy-archive-post {
   display: grid;
-  gap: var(--hardy-space-2);
-  padding-block: var(--hardy-space-3);
-  border-bottom: 1px solid var(--hardy-color-border);
+  gap: 8px;
 }
 
 .hardy-archive-post__link {
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.45;
   overflow-wrap: anywhere;
 }
 
 .hardy-archive-post__date {
   color: var(--hardy-color-muted);
   font-size: 13px;
+  line-height: 1.4;
 }

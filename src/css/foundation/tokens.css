@@ -3,15 +3,19 @@
   --hardy-color-bg: #ffffff;
   --hardy-color-surface: #ffffff;
   --hardy-color-text: #273343;
-  --hardy-color-muted: #8390a0;
-  --hardy-color-subtle: #a0a9b5;
+  --hardy-color-muted: #52657b;
+  --hardy-color-subtle: #607286;
   --hardy-color-border: #edf0f3;
   --hardy-color-accent: #52657b;
   --hardy-color-accent-contrast: #ffffff;
   --hardy-color-focus: #0f766e;
   --hardy-color-overlay: rgb(15 23 42 / 0.36);
+  --hardy-font-serif:
+    "Droid Serif", Georgia, "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", serif;
   --hardy-font-sans:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    "Droid Serif", "PingFang SC", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei",
+    sans-serif;
   --hardy-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   --hardy-space-1: 4px;
   --hardy-space-2: 8px;
@@ -33,10 +37,38 @@
   --hardy-shell-breakpoint: 1024px;
   --hardy-list-breakpoint: 768px;
   --hardy-sidebar-width: 25%;
-  --hardy-content-width: 75%;
-  --hardy-content-measure: 900px;
+  --hardy-content-width: 1fr;
+  --hardy-content-measure: 920px;
   --hardy-mobile-header-height: 68px;
   --hardy-mobile-drawer-width: min(320px, 86vw);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  z-index: 1;
+  clip-path: circle(0 at var(--hardy-transition-x) var(--hardy-transition-y));
+  animation: hardy-color-scheme-reveal 420ms var(--hardy-ease-standard) forwards;
+}
+
+@keyframes hardy-color-scheme-reveal {
+  to {
+    clip-path: circle(
+      var(--hardy-transition-radius) at var(--hardy-transition-x) var(--hardy-transition-y)
+    );
+  }
+}
+
+html[data-hardy-content-width="compact"] {
+  --hardy-content-measure: 760px;
+}
+
+html[data-hardy-content-width="wide"] {
+  --hardy-content-measure: 1040px;
 }
 
 html[data-color-scheme="dark"] {

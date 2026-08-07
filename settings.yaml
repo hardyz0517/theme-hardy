@@ -11,17 +11,93 @@ spec:
           name: custom_footer
           label: 自定义页脚文本
           value: ""
+          help: 留空时显示站点标题。
+        - $formkit: switch
+          name: show_socials
+          label: 显示社交链接区域
+          value: true
+    - group: profile
+      label: 个人信息
+      formSchema:
+        - $formkit: attachment
+          name: avatar
+          label: 头像
+          help: 留空时使用站点 Logo；建议上传正方形图片。
+          accepts:
+            - image/*
+          value: ""
+        - $formkit: text
+          name: display_name
+          label: 显示名称
+          help: 留空时显示站点标题。
+          value: ""
+        - $formkit: textarea
+          name: tagline
+          label: 一句话简介
+          help: 留空时显示站点副标题。
+          value: ""
+    - group: social
+      label: 社交链接
+      formSchema:
         - $formkit: url
-          name: social_github
-          label: GitHub 链接
+          name: github
+          label: GitHub
+          value: ""
+        - $formkit: url
+          name: luogu
+          label: 洛谷
+          value: ""
+        - $formkit: text
+          name: qq
+          label: QQ
+          help: 填写 QQ 号，前端会生成联系入口。
           value: ""
         - $formkit: email
-          name: social_email
-          label: 邮箱地址
+          name: email
+          label: Email
           value: ""
         - $formkit: url
-          name: social_website
-          label: 个人网站链接
+          name: twitter
+          label: Twitter / X
+          value: ""
+        - $formkit: url
+          name: bilibili
+          label: Bilibili
+          value: ""
+        - $formkit: url
+          name: weibo
+          label: 微博
+          value: ""
+        - $formkit: url
+          name: zhihu
+          label: 知乎
+          value: ""
+        - $formkit: attachment
+          name: wechat_qr_code
+          label: 微信二维码图片
+          help: 上传后会在侧栏社交链接中提供查看入口。
+          accepts:
+            - image/*
+          value: ""
+        - $formkit: url
+          name: youtube
+          label: YouTube
+          value: ""
+        - $formkit: url
+          name: xiaohongshu
+          label: 小红书
+          value: ""
+        - $formkit: url
+          name: website
+          label: 个人网站
+          value: ""
+        - $formkit: url
+          name: rss
+          label: RSS
+          value: ""
+        - $formkit: url
+          name: steam
+          label: Steam
           value: ""
     - group: appearance
       label: 外观
@@ -37,3 +113,48 @@ spec:
               value: light
             - label: 深色
               value: dark
+        - $formkit: color
+          name: accent_color
+          label: 品牌强调色
+          value: "#52657b"
+        - $formkit: color
+          name: background_color
+          label: 页面背景色
+          value: "#ffffff"
+    - group: layout
+      label: 布局
+      formSchema:
+        - $formkit: radio
+          name: content_width
+          label: 内容区宽度
+          value: standard
+          options:
+            - label: 紧凑
+              value: compact
+            - label: 标准
+              value: standard
+            - label: 宽松
+              value: wide
+        - $formkit: switch
+          name: show_post_covers
+          label: 显示文章封面
+          value: true
+        - $formkit: switch
+          name: show_post_excerpt
+          label: 显示文章摘要
+          value: true
+        - $formkit: switch
+          name: show_post_meta
+          label: 显示文章信息
+          value: true
+    - group: home
+      label: 首页
+      formSchema:
+        - $formkit: text
+          name: heading
+          label: 首页标题
+          value: 最新文章
+        - $formkit: textarea
+          name: description
+          label: 首页说明
+          value: ""

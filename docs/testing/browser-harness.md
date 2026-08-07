@@ -25,22 +25,21 @@ local storage, color-mode choices, and plugin sessions do not leak between cases
 On 2026-08-07, read-only HTTP probes against `https://hardyzheng.com` produced the following
 baseline. This is a route/rendering smoke result, not a substitute for browser interaction tests:
 
-| URL                                    | Expected evidence                           | Observed                                   |
-| -------------------------------------- | ------------------------------------------- | ------------------------------------------ |
-| `/`                                    | Hardy shell and list page                   | HTTP 200 HTML                              |
-| `/archives/`                           | Archive list                                | HTTP 200 HTML                              |
-| `/categories/`                         | Category tree                               | HTTP 200 HTML                              |
-| `/categories/default`                  | Category post list                          | HTTP 200 HTML                              |
-| `/tags/`                               | Tag list                                    | HTTP 200 HTML                              |
-| `/tags/halo`                           | Tag post list                               | HTTP 200 HTML                              |
-| `/archives/hello-halo`                 | Post detail, Comment Widget host            | HTTP 200 HTML                              |
-| `/about`                               | Single-page detail, SinglePage comment host | HTTP 200 HTML                              |
-| `/authors/test`                        | Author post list                            | HTTP 200 HTML                              |
-| `/moments`                             | Moments list                                | HTTP 200 HTML                              |
-| `/links`                               | Links list                                  | HTTP 200 HTML with populated fixture       |
-| `/photos`                              | Photos list                                 | HTTP 200 HTML with five populated fixtures |
-| `/archives/hardy-fixture-code-content` | Code fixture                                | HTTP 200 HTML with `<pre>` output          |
-| `/archives/hardy-fixture-rich-content` | KaTeX fixture                               | HTTP 200 HTML with MathML output           |
+| URL                                                                                                    | Expected evidence                           | Observed                                                         |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------- | ---------------------------------------------------------------- |
+| `/`                                                                                                    | Hardy shell and list page                   | HTTP 200 HTML                                                    |
+| `/archives/`                                                                                           | Archive list                                | HTTP 200 HTML                                                    |
+| `/categories/`                                                                                         | Category tree                               | HTTP 200 HTML                                                    |
+| `/categories/default`                                                                                  | Category post list                          | HTTP 200 HTML                                                    |
+| `/tags/`                                                                                               | Tag list                                    | HTTP 200 HTML                                                    |
+| `/tags/halo`                                                                                           | Tag post list                               | HTTP 200 HTML                                                    |
+| `/archives/ben-zhou-ji-shu-guan-cha-liu-lan-qi-ai-gong-ju-yu-kai-yuan-xie-zuo-de-san-ge-xiao-bian-hua` | Post detail, Comment Widget host            | HTTP 200 HTML                                                    |
+| `/about`                                                                                               | Single-page detail, SinglePage comment host | HTTP 200 HTML                                                    |
+| `/authors/test`                                                                                        | Author post list                            | HTTP 200 HTML                                                    |
+| `/moments`                                                                                             | Moments list                                | HTTP 200 HTML                                                    |
+| `/links`                                                                                               | Links list                                  | HTTP 200 HTML with populated fixture                             |
+| `/photos`                                                                                              | Photos list                                 | HTTP 200 HTML with five populated fixtures                       |
+| Current published post                                                                                 | Post detail fixture                         | HTTP 200 HTML; smoke discovers its route from the live home page |
 
 The same responses identify Halo 2.25.4 and inject Comment Widget 3.1.2, Search Widget 1.7.1,
 Shiki 1.4.2, hyperlink-card 1.9.1, and KaTeX 3.0.0. Moments, Links, and Photos are installed on
@@ -55,15 +54,25 @@ Static validation remains independent of the external server:
 pnpm check
 pnpm build-only
 pnpm build
+pnpm test:contrast
+pnpm test:hardening
 ```
 
-After explicit approval to add a browser-test dependency, add isolated `test:smoke`, `test:interaction`, and `test:visual` commands. They must fail clearly when `HALO_TEST_BASE_URL` is missing, never become part of `pnpm check`, and cover the route, plugin, viewport, and color-mode matrices in `implementation-plan.md`.
+The repository now provides a dependency-free `pnpm test:smoke` command using Node's built-in
+`fetch`. It fails clearly when `HALO_TEST_BASE_URL` is missing, never becomes part of `pnpm check`,
+and checks each core and optional route independently for HTTP success and Hardy theme assets. Its
+post route is discovered from the public home page instead of being coupled to a mutable fixture
+slug.
+Browser-only `test:interaction` and `test:visual` commands remain deferred until a browser-test
+dependency is explicitly approved.
 
 The proposed command contract is:
 
 | Command                 | Scope                                                                                           | Server requirement                                         |
 | ----------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `pnpm test:smoke`       | HTTP status, generated asset presence, core route headings, and plugin capability markers.      | `HALO_TEST_BASE_URL` required.                             |
+| `pnpm test:smoke`       | HTTP status and generated Hardy asset presence for each core and optional plugin route.         | `HALO_TEST_BASE_URL` required.                             |
+| `pnpm test:contrast`    | Light/dark muted and subtle token contrast against their theme backgrounds.                     | None.                                                      |
+| `pnpm test:hardening`   | Reduced motion, media fallback, idempotent hooks, feature isolation, and prose media bounds.    | None.                                                      |
 | `pnpm test:interaction` | Menu, Escape/mask close, focus restoration, color mode, share fallback, TOC, and scroll-to-top. | Live browser URL required.                                 |
 | `pnpm test:visual`      | Fixed viewport/color-mode screenshots and overflow assertions.                                  | Live browser URL and screenshot output directory required. |
 
@@ -73,7 +82,7 @@ PowerShell session (it does not mutate the site):
 ```powershell
 $base = $env:HALO_TEST_BASE_URL
 if ([string]::IsNullOrWhiteSpace($base)) { throw 'HALO_TEST_BASE_URL is required' }
-$routes = @('/', '/archives/', '/categories/', '/categories/default', '/tags/', '/tags/halo', '/archives/hello-halo', '/about')
+$routes = @('/', '/archives/', '/categories/', '/categories/default', '/tags/', '/tags/halo', '/about')
 foreach ($route in $routes) {
   $response = Invoke-WebRequest -Uri ([Uri]::new(([Uri]::new($base)), $route)) -Method Get
   "{0} {1} {2}" -f $response.StatusCode, $route, $response.Headers.'Content-Type'

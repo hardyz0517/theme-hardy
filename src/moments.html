@@ -1,27 +1,53 @@
 <include src="layout.html">
   <template name="head">
-    <title th:text="|${site.title} - 瞬间|">瞬间</title>
+    <title th:text="|瞬间 - ${site.title}|">瞬间</title>
   </template>
 
   <th:block th:if="${pluginFinder.available('PluginMoments')}">
     <section class="hardy-list-page hardy-moments-page">
-      <div th:with="hardyPageEyebrow='瞬间',hardyPageTitle='瞬间'">
-        <include src="components/page-heading.html"></include>
-      </div>
+      <header class="hardy-moments-heading">
+        <h1 class="hardy-moments-heading__title">
+          <svg
+            class="hardy-moments-heading__icon hardy-icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M4 7.5A2.5 2.5 0 0 1 6.5 5h2l1.2-2h4.6l1.2 2h2A2.5 2.5 0 0 1 20 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5v-9Z"
+            />
+            <circle cx="12" cy="12" r="3.25" />
+          </svg>
+          <span>瞬间</span>
+        </h1>
+        <a
+          class="hardy-moments-heading__rss"
+          th:href="@{/feed/moments/rss.xml}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg class="hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 19.5a1.5 1.5 0 1 0 0 .01M5 12a7 7 0 0 1 7 7M5 5a14 14 0 0 1 14 14" />
+          </svg>
+          <span>RSS 订阅</span>
+        </a>
+      </header>
 
       <nav
         class="hardy-moments-tags"
-        aria-label="Moment tags"
+        aria-label="瞬间标签"
         th:if="${tags != null and !#lists.isEmpty(tags)}"
       >
-        <a class="hardy-moments-tags__link" th:href="@{/moments}">All</a>
+        <a class="hardy-moments-tags__link is-active" th:href="@{/moments}">
+          <span>全部</span>
+        </a>
         <a
           class="hardy-moments-tags__link"
           th:each="tag : ${tags}"
           th:href="@{/moments(tag=${tag.name})}"
-          th:text="${tag.displayName ?: tag.name}"
-          >Tag</a
         >
+          <span th:text="${tag.name}">Tag</span>
+          <span class="hardy-moments-tags__count" th:text="${tag.momentCount ?: 0}">0</span>
+        </a>
       </nav>
 
       <div
@@ -31,56 +57,15 @@
         <include src="components/empty-state.html"></include>
       </div>
 
-      <div class="hardy-moments-list" th:if="${moments != null and !#lists.isEmpty(moments.items)}">
-        <article class="hardy-moment-card" th:each="moment : ${moments.items}">
-          <header class="hardy-moment-card__header">
-            <time
-              th:if="${moment.spec?.releaseTime}"
-              th:datetime="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd')}"
-              th:text="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd')}"
-              >2026-01-01</time
-            >
-            <a
-              class="hardy-moment-card__permalink"
-              th:href="@{/moments/{name}(name=${moment.metadata.name})}"
-              aria-label="查看瞬间"
-              >查看</a
-            >
-          </header>
-          <div
-            class="hardy-prose hardy-moment-card__content"
-            th:utext="${moment.spec.content.html ?: moment.spec.content.raw}"
-          >
-            Moment content
-          </div>
-          <footer class="hardy-moment-card__footer">
-            <div
-              class="hardy-moment-card__tags"
-              th:if="${moment.spec?.tags != null and !#lists.isEmpty(moment.spec.tags)}"
-            >
-              <a
-                class="hardy-detail__taxonomy"
-                th:each="tag : ${moment.spec.tags}"
-                th:href="@{/moments(tag=${tag.name})}"
-                th:text="${tag.displayName ?: tag.name}"
-                >Tag</a
-              >
-            </div>
-            <div class="hardy-moment-card__stats">
-              <span
-                th:if="${moment.stats?.upvote != null}"
-                th:text="|${moment.stats.upvote} 次点赞|"
-                >0 次点赞</span
-              >
-              <span
-                th:if="${moment.stats?.approvedComment != null}"
-                th:text="|${moment.stats.approvedComment} 条评论|"
-                >0 条评论</span
-              >
-            </div>
-          </footer>
-        </article>
-      </div>
+      <ul
+        class="hardy-moments-list"
+        role="list"
+        th:if="${moments != null and !#lists.isEmpty(moments.items)}"
+      >
+        <li class="hardy-moment-card" th:each="moment : ${moments.items}">
+          <include src="components/moment-item.html"></include>
+        </li>
+      </ul>
 
       <div th:with="hardyPagination=${moments}">
         <include src="components/pagination.html"></include>

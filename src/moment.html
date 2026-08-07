@@ -5,44 +5,27 @@
 
   <th:block th:if="${pluginFinder.available('PluginMoments')}">
     <article class="hardy-detail hardy-moment-detail">
-      <header class="hardy-detail__header">
-        <p class="hardy-detail__eyebrow">瞬间</p>
-        <h1 class="hardy-detail__title">瞬间</h1>
-        <div class="hardy-detail__meta">
-          <time
-            th:if="${moment.spec?.releaseTime}"
-            th:datetime="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd')}"
-            th:text="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd')}"
-            >2026-01-01</time
+      <header class="hardy-moments-heading hardy-moment-detail__heading">
+        <h1 class="hardy-moments-heading__title">
+          <svg
+            class="hardy-moments-heading__icon hardy-icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
           >
-        </div>
-      </header>
-
-      <div class="hardy-prose" th:utext="${moment.spec.content.html ?: moment.spec.content.raw}">
-        瞬间内容
-      </div>
-
-      <footer class="hardy-detail__footer">
-        <div
-          class="hardy-detail__taxonomies"
-          th:if="${moment.spec?.tags != null and !#lists.isEmpty(moment.spec.tags)}"
+            <path
+              d="M4 7.5A2.5 2.5 0 0 1 6.5 5h2l1.2-2h4.6l1.2 2h2A2.5 2.5 0 0 1 20 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5v-9Z"
+            />
+            <circle cx="12" cy="12" r="3.25" />
+          </svg>
+          <span>瞬间</span>
+        </h1>
+        <a class="hardy-moments-heading__rss" th:href="@{/moments}" aria-label="返回瞬间列表"
+          >返回列表</a
         >
-          <a
-            class="hardy-detail__taxonomy"
-            th:each="tag : ${moment.spec.tags}"
-            th:href="@{/moments(tag=${tag.name})}"
-            th:text="${tag.displayName ?: tag.name}"
-            >标签</a
-          >
-        </div>
-      </footer>
+      </header>
+      <div class="hardy-moment-card hardy-moment-card--detail">
+        <include src="components/moment-item.html"></include>
+      </div>
     </article>
-
-    <section
-      class="hardy-comments"
-      th:if="${haloCommentEnabled and moment?.metadata?.name != null}"
-    >
-      <halo:comment group="moment.halo.run" kind="Moment" th:attr="name=${moment.metadata.name}" />
-    </section>
   </th:block>
 </include>

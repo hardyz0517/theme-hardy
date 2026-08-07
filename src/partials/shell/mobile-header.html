@@ -1,25 +1,85 @@
-<header class="hardy-mobile-header" data-hardy-mobile-header>
+<header
+  class="hardy-mobile-header"
+  data-hardy-mobile-header
+  th:with="profile = ${theme.config['profile']}"
+>
   <button
     class="hardy-shell-button"
     type="button"
     data-hardy-menu-trigger
     aria-controls="hardy-mobile-menu"
     aria-expanded="false"
+    aria-label="打开菜单"
   >
-    菜单
+    <svg class="hardy-mobile-header__icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
   </button>
-  <a class="hardy-mobile-header__title" th:href="@{/}" th:text="${site.title}">Site Title</a>
+  <a class="hardy-mobile-header__brand" th:href="@{/}">
+    <img
+      class="hardy-mobile-header__avatar"
+      th:if="${!#strings.isEmpty(profile?.avatar)}"
+      th:src="${profile.avatar}"
+      th:alt="${profile?.display_name ?: site.title}"
+    />
+    <span
+      class="hardy-mobile-header__avatar hardy-mobile-header__avatar--placeholder"
+      th:if="${#strings.isEmpty(profile?.avatar) and !site.logo}"
+      aria-hidden="true"
+      >H</span
+    >
+    <span class="hardy-mobile-header__title" th:text="${profile?.display_name ?: site.title}"
+      >Site Title</span
+    >
+  </a>
   <div class="hardy-mobile-header__actions">
     <button
       class="hardy-shell-button"
       type="button"
       data-hardy-search-trigger
+      aria-label="搜索"
       th:if="${pluginFinder.available('PluginSearchWidget')}"
     >
-      搜索
+      <svg class="hardy-mobile-header__icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-4-4" />
+      </svg>
     </button>
-    <button class="hardy-shell-button" type="button" data-hardy-color-scheme-toggle>
-      <span data-hardy-color-scheme-label>自动</span>
+    <button
+      class="hardy-shell-button"
+      type="button"
+      data-hardy-color-scheme-toggle
+      aria-label="切换颜色模式"
+    >
+      <svg
+        class="hardy-mobile-header__icon hardy-icon"
+        data-hardy-color-scheme-icon="auto"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <path data-hardy-color-scheme-auto-fill d="M12 3a9 9 0 0 1 0 18z" />
+      </svg>
+      <svg
+        class="hardy-mobile-header__icon hardy-icon"
+        data-hardy-color-scheme-icon="light"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"
+        />
+      </svg>
+      <svg
+        class="hardy-mobile-header__icon hardy-icon"
+        data-hardy-color-scheme-icon="dark"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      </svg>
+      <span class="hardy-visually-hidden" data-hardy-color-scheme-label>自动</span>
     </button>
   </div>
 </header>

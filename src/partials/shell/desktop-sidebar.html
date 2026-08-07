@@ -1,4 +1,8 @@
-<aside class="hardy-sidebar" aria-label="站点侧栏" th:with="menu = ${menuFinder.getPrimary()}">
+<aside
+  class="hardy-sidebar"
+  aria-label="站点侧栏"
+  th:with="menu = ${menuFinder.getPrimary()}, profile = ${theme.config['profile']}"
+>
   <div class="hardy-sidebar__tools" aria-label="站点工具">
     <button
       class="hardy-sidebar__icon-button"
@@ -7,7 +11,34 @@
       aria-label="切换颜色模式"
       title="切换颜色模式"
     >
-      <span class="hardy-sidebar__icon" aria-hidden="true">◐</span>
+      <svg
+        class="hardy-sidebar__icon hardy-icon"
+        data-hardy-color-scheme-icon="auto"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <path data-hardy-color-scheme-auto-fill d="M12 3a9 9 0 0 1 0 18z" />
+      </svg>
+      <svg
+        class="hardy-sidebar__icon hardy-icon"
+        data-hardy-color-scheme-icon="light"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"
+        />
+      </svg>
+      <svg
+        class="hardy-sidebar__icon hardy-icon"
+        data-hardy-color-scheme-icon="dark"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      </svg>
       <span class="hardy-sidebar__tool-label" data-hardy-color-scheme-label>自动</span>
     </button>
     <button
@@ -18,54 +49,52 @@
       title="搜索"
       th:if="${pluginFinder.available('PluginSearchWidget')}"
     >
-      <span class="hardy-sidebar__icon" aria-hidden="true">⌕</span>
+      <svg class="hardy-sidebar__icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-4-4" />
+      </svg>
       <span class="hardy-sidebar__tool-label">搜索</span>
     </button>
   </div>
 
-  <a class="hardy-brand" th:href="@{/}">
-    <span class="hardy-brand__avatar" aria-hidden="true">
-      <img th:if="${site.logo}" th:src="${site.logo}" th:alt="${site.title}" />
-      <span th:unless="${site.logo}">H</span>
+  <div class="hardy-brand">
+    <span class="hardy-brand__avatar-wrap">
+      <a class="hardy-brand__avatar-link" th:href="@{/}" aria-label="返回首页">
+        <span class="hardy-brand__avatar" aria-hidden="true">
+          <img
+            th:if="${!#strings.isEmpty(profile?.avatar)}"
+            th:src="${profile.avatar}"
+            th:alt="${profile?.display_name ?: site.title}"
+          />
+          <img
+            th:if="${#strings.isEmpty(profile?.avatar) and site.logo}"
+            th:src="${site.logo}"
+            th:alt="${profile?.display_name ?: site.title}"
+          />
+          <span th:if="${#strings.isEmpty(profile?.avatar) and !site.logo}">H</span>
+        </span>
+      </a>
+      <a class="hardy-brand__login" th:href="@{/console}" aria-label="登录后台" title="登录后台">
+        <svg class="hardy-brand__login-icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M13 7l5 5-5 5M18 12H5" />
+          <path d="M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4" />
+        </svg>
+      </a>
     </span>
-    <span>
-      <span class="hardy-brand__title" th:text="${site.title}">Site Title</span>
-      <span class="hardy-brand__subtitle" th:if="${site.subtitle}" th:text="${site.subtitle}"
+    <a class="hardy-brand__identity" th:href="@{/}">
+      <span class="hardy-brand__title" th:text="${profile?.display_name ?: site.title}"
+        >Site Title</span
+      >
+      <span
+        class="hardy-brand__subtitle"
+        th:if="${!#strings.isEmpty(profile?.tagline ?: site.subtitle)}"
+        th:text="${profile?.tagline ?: site.subtitle}"
         >Site subtitle</span
       >
-    </span>
-  </a>
-
-  <div class="hardy-socials" aria-label="社交链接">
-    <a
-      class="hardy-socials__link"
-      th:if="${!#strings.isEmpty(theme.config.basic?.social_github)}"
-      th:href="${theme.config.basic.social_github}"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="GitHub"
-      title="GitHub"
-      >码</a
-    >
-    <a
-      class="hardy-socials__link"
-      th:if="${!#strings.isEmpty(theme.config.basic?.social_email)}"
-      th:href="${'mailto:' + theme.config.basic.social_email}"
-      aria-label="邮箱"
-      title="邮箱"
-      >邮</a
-    >
-    <a
-      class="hardy-socials__link"
-      th:if="${!#strings.isEmpty(theme.config.basic?.social_website)}"
-      th:href="${theme.config.basic.social_website}"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="个人网站"
-      title="个人网站"
-      >站</a
-    >
+    </a>
   </div>
+
+  <include src="shell/social-links.html"></include>
 
   <nav
     class="hardy-nav"

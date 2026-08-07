@@ -1,7 +1,7 @@
 .hardy-prose {
   color: var(--hardy-color-text);
-  font-size: 16px;
-  line-height: 1.9;
+  font-size: 18px;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
@@ -92,6 +92,10 @@
   height: auto;
   margin-inline: auto;
   border-radius: var(--hardy-radius-md);
+}
+
+.hardy-prose :where(iframe, video, audio, svg) {
+  max-width: 100%;
 }
 
 .hardy-prose hr {

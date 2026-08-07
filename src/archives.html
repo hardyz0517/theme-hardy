@@ -4,7 +4,7 @@
   </template>
 
   <section class="hardy-list-page">
-    <div th:with="hardyPageTitle='归档'">
+    <div th:with="hardyPageTitle='文章归档'">
       <include src="components/page-heading.html"></include>
     </div>
 
@@ -18,11 +18,8 @@
     <div class="hardy-archive-list" th:unless="${#lists.isEmpty(archives.items)}">
       <section class="hardy-archive-year" th:each="archive : ${archives.items}">
         <h2 class="hardy-archive-year__title" th:text="${archive.year}">2026</h2>
-        <section class="hardy-archive-month" th:each="month : ${archive.months}">
-          <h3 class="hardy-archive-month__title" th:text="|${archive.year}-${month.month}|">
-            2026-01
-          </h3>
-          <ul class="hardy-archive-posts">
+        <ul class="hardy-archive-posts">
+          <th:block th:each="month : ${archive.months}">
             <li class="hardy-archive-post" th:each="post : ${month.posts}">
               <a
                 class="hardy-archive-post__link"
@@ -40,8 +37,8 @@
                 2026-01-01
               </time>
             </li>
-          </ul>
-        </section>
+          </th:block>
+        </ul>
       </section>
     </div>
 

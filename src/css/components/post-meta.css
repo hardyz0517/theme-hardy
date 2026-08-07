@@ -4,8 +4,9 @@
   gap: var(--hardy-space-2) var(--hardy-space-3);
   align-items: center;
   color: var(--hardy-color-muted);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.333;
 }
 
 .hardy-post-meta__item {
@@ -18,4 +19,37 @@
 
 .hardy-post-meta__link:hover {
   color: var(--hardy-color-accent);
+}
+
+.hardy-post-meta__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hardy-icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.hardy-post-meta__icon {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+}
+
+.hardy-post-meta__item::before {
+  display: none;
+  color: currentColor;
+  color: currentColor;
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.hardy-post-meta__date::before {
+  content: "";
 }

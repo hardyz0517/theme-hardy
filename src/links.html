@@ -9,29 +9,6 @@
         <include src="components/page-heading.html"></include>
       </div>
 
-      <nav
-        class="hardy-links-groups"
-        aria-label="Link groups"
-        th:if="${simpleGroups != null and !#lists.isEmpty(simpleGroups)}"
-      >
-        <a
-          class="hardy-links-groups__link"
-          th:classappend="${group == null or group == ''} ? ' is-active'"
-          th:href="@{/links}"
-          th:aria-current="${group == null or group == ''} ? 'page' : null"
-          >All links</a
-        >
-        <a
-          class="hardy-links-groups__link"
-          th:each="linkGroup : ${simpleGroups}"
-          th:classappend="${group == linkGroup.metadata.name} ? ' is-active'"
-          th:href="@{/links(group=${linkGroup.metadata.name})}"
-          th:aria-current="${group == linkGroup.metadata.name} ? 'page' : null"
-          th:text="${linkGroup.spec.displayName}"
-          >Group</a
-        >
-      </nav>
-
       <div
         th:if="${#lists.isEmpty(links)}"
         th:with="hardyEmptyTitle='暂无友链',hardyEmptyDescription='添加后的友链会显示在这里。'"

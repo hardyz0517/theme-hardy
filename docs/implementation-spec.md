@@ -161,7 +161,9 @@ Every list page must render a useful empty state, not an empty `<ul>`. Missing c
 
 Settings are grouped by stable user intent:
 
-- `basic`: custom footer text and optional social links (`social_github`, `social_email`, `social_website`). Empty links are omitted from the sidebar.
+- `basic`: custom footer text and the global social-links visibility switch. Legacy `social_github`, `social_email`, and `social_website` values remain valid as a read fallback.
+- `profile`: optional sidebar avatar, display name, and one-line introduction. Empty values fall back to the corresponding site identity values.
+- `social`: optional GitHub, Luogu, QQ number, email, Twitter / X, Bilibili, Weibo, Zhihu, WeChat QR image, YouTube, Xiaohongshu, and personal-site links. Empty values are omitted from the desktop sidebar; the WeChat image is exposed as a link instead of being eagerly rendered, and a QQ number is converted to a Tencent contact URL.
 - `appearance`: color scheme and motion preference.
 - `layout`: sidebar visibility and list presentation only when both modes are implemented.
 - `post`: table of contents, cover visibility, and detail-page actions only when consumed.
@@ -226,9 +228,13 @@ The menu initializer targets `data-hardy-menu-trigger`, `data-hardy-menu`, and `
 
 ### Color scheme
 
-The initializer reads the configured default, applies `auto`, `light`, or `dark` to the root, updates the control's checked state, and emits no network request. System preference changes affect only `auto` mode.
+The initializer reads the configured default, applies `auto`, `light`, or `dark` to the root, updates both controls, and emits no network request. System preference changes affect only `auto` mode. Once a user clicks the control, it alternates between explicit light and dark modes so each click has visible feedback even when `auto` currently matches the system preference. Browsers supporting View Transitions use a circular reveal from the clicked control; reduced-motion and older browsers use an immediate fallback.
 
 Persistence precedence is: a valid local user choice in `localStorage["hardy:color-scheme"]`, then `theme.config.appearance.color_scheme`, then `auto`. Invalid stored or configured values are ignored. Hardy sets `data-color-scheme` to the active mode (`auto`, `light`, or `dark`) for official plugin compatibility.
+
+### Page entry animation
+
+The reference MHTML uses element-level Animate.css-style entry effects rather than a full-page wipe: shared shell elements use a one-second opacity fade with short staggered delays, archive dates enter with a downward fade, and reduced-motion preferences collapse the animation duration. Hardy keeps a short internal-link fade-out and applies the same element-level fade-in treatment on the next page.
 
 ### Scroll-to-top
 

@@ -8,7 +8,7 @@
   aria-labelledby="hardy-mobile-menu-title"
   aria-hidden="true"
   tabindex="-1"
-  th:with="menu = ${menuFinder.getPrimary()}"
+  th:with="menu = ${menuFinder.getPrimary()}, profile = ${theme.config['profile']}"
   hidden
 >
   <div class="hardy-mobile-menu__top">
@@ -17,18 +17,36 @@
 
   <a class="hardy-brand" th:href="@{/}">
     <span class="hardy-brand__avatar" aria-hidden="true">
-      <img th:if="${site.logo}" th:src="${site.logo}" th:alt="${site.title}" />
-      <span th:unless="${site.logo}">H</span>
+      <img
+        th:if="${!#strings.isEmpty(profile?.avatar)}"
+        th:src="${profile.avatar}"
+        th:alt="${profile?.display_name ?: site.title}"
+      />
+      <img
+        th:if="${#strings.isEmpty(profile?.avatar) and site.logo}"
+        th:src="${site.logo}"
+        th:alt="${profile?.display_name ?: site.title}"
+      />
+      <span th:if="${#strings.isEmpty(profile?.avatar) and !site.logo}">H</span>
     </span>
     <span>
-      <span id="hardy-mobile-menu-title" class="hardy-brand__title" th:text="${site.title}"
+      <span
+        id="hardy-mobile-menu-title"
+        class="hardy-brand__title"
+        th:text="${profile?.display_name ?: site.title}"
         >Site Title</span
       >
-      <span class="hardy-brand__subtitle" th:if="${site.subtitle}" th:text="${site.subtitle}">
+      <span
+        class="hardy-brand__subtitle"
+        th:if="${!#strings.isEmpty(profile?.tagline ?: site.subtitle)}"
+        th:text="${profile?.tagline ?: site.subtitle}"
+      >
         Site subtitle
       </span>
     </span>
   </a>
+
+  <include src="shell/social-links.html"></include>
 
   <nav
     class="hardy-nav"

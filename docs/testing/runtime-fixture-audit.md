@@ -11,6 +11,8 @@ may be removed from the user-managed test site without affecting ordinary conten
 - Long title, unbroken word, empty-cover, long-excerpt, taxonomy, pinned, comments-on, and
   comments-off cases.
 - Two published pages: `/hardy-fixture-page-comments` and `/hardy-fixture-page-no-comments`.
+- The comments-enabled fixture contains eight `hardy-fixture-long-comment-*` top-level comments
+  and three synthetic replies, created through Halo's public comment contract for long-thread QA.
 - Primary menu entries for an internal page, external new-window URL, nested page, and existing
   core routes.
 - Two public Moments from `PluginMoments` 1.16.1, including
@@ -20,10 +22,10 @@ may be removed from the user-managed test site without affecting ordinary conten
   the URL intentionally responds 404 to exercise link-status/error presentation.
 - Five `hardy-fixture-` images uploaded through `PluginPhotos` 2.1.2 using the built-in `本地存储`
   policy; the 71-byte fixtures intentionally render detail media fallbacks and exercise neighbors.
-- One published `hardy-fixture-rich-content` post created through the official editor; its front-end
+- A previously published rich-content post created through the official editor; its front-end
   output currently contains an empty plugin-owned KaTeX block and is retained for editor-contract
   follow-up. No Shiki or hyperlink-card element is claimed from this fixture.
-- One published `hardy-fixture-code-content` post created through the official editor; the public
+- A previously published code-content post created through the official editor; the public
   response contains the expected `<pre>` block and fixture source text.
 
 ## Route Evidence
@@ -45,7 +47,7 @@ now reference the upgraded package assets `main-Btlf9kZt.js` and `main-DWGKb33z.
 | `/moments` and `/moments/moment-nsb2va7a`                                                       | 200 after adding `moments.html` and `moment.html`; list/detail content and Moment comments render.                                                                      |
 | `/moments` and `/moments/moment-dp1iqbqt`                                                       | 200; the `hardy-fixture-moment` text renders in the list and detail routes. At 390px neither route has horizontal overflow; the detail route has a Moment comment host. |
 | `/links`, `/photos`                                                                             | 200; optional plugin list routes render with their current populated fixtures.                                                                                          |
-| `/archives/hardy-fixture-code-content` and `/archives/hardy-fixture-rich-content`               | 200; the former contains `<pre>` source text and the latter contains plugin-owned KaTeX MathML.                                                                         |
+| Historical fixture slugs (no longer published)                                                  | Previously returned 200; the former contained `<pre>` source text and the latter contained plugin-owned KaTeX MathML.                                                   |
 
 ## Interaction Evidence
 
@@ -85,3 +87,13 @@ also exposed their TOC host.
   failure-state checks remain pending.
 - Halo 2.0.0 compatibility and the full 390/768/1024/1280/1920 light/dark visual matrix are
   not claimed as complete.
+
+## Temporary Halo 2.0.0 Compatibility Probe
+
+On 2026-08-07 an official Halo v2.0.0 source build was run with Temurin JDK 17.0.20 and an
+isolated H2 database. The generated Hardy package, augmented only in the temporary copy with
+Halo 2.0 legacy `website`/`require` metadata aliases, installed as `theme-hardy`. After setting
+the temporary system `theme.active` value to `theme-hardy`, `/`, `/archives/`, `/categories/`,
+and `/tags/` returned HTTP 200. `/about` returned HTTP 404 because no SinglePage fixture exists
+in that database. This is installation and empty-list evidence only; it does not close the full
+Halo 2.0.0 compatibility gate.

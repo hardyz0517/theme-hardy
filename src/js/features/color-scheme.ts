@@ -37,8 +37,50 @@ const storeMode = (mode: ColorSchemeMode): void => {
 };
 
 const getNextMode = (mode: ColorSchemeMode): ColorSchemeMode => {
-  const currentIndex = validModes.indexOf(mode);
-  return validModes[(currentIndex + 1) % validModes.length];
+  // `auto` can look identical to an explicit mode. Always choose the
+  // opposite effective mode so every click produces visible feedback.
+  if (mode === "auto") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "dark";
+  }
+  return mode === "light" ? "dark" : "light";
+};
+
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (update: () => void) => { finished: Promise<unknown> };
+};
+
+const applyModeWithTransition = (mode: ColorSchemeMode, control: HTMLElement): void => {
+  const root = document.documentElement;
+  const transitionDocument = document as ViewTransitionDocument;
+  const startViewTransition = transitionDocument.startViewTransition;
+
+  if (!startViewTransition || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    applyMode(mode);
+    return;
+  }
+
+  const bounds = control.getBoundingClientRect();
+  const x = bounds.left + bounds.width / 2;
+  const y = bounds.top + bounds.height / 2;
+  const radius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y),
+  );
+  root.style.setProperty("--hardy-transition-x", `${x}px`);
+  root.style.setProperty("--hardy-transition-y", `${y}px`);
+  root.style.setProperty("--hardy-transition-radius", `${radius}px`);
+
+  try {
+    const transition = startViewTransition.call(transitionDocument, () => applyMode(mode));
+    void transition.finished.finally(() => {
+      root.style.removeProperty("--hardy-transition-x");
+      root.style.removeProperty("--hardy-transition-y");
+      root.style.removeProperty("--hardy-transition-radius");
+    });
+  } catch {
+    // Another transition may still be running. Keep the interaction responsive.
+    applyMode(mode);
+  }
 };
 
 const applyMode = (mode: ColorSchemeMode): void => {
@@ -86,7 +128,7 @@ export const initializeColorScheme = (): void => {
     control.addEventListener("click", () => {
       activeMode = getNextMode(activeMode);
       storeMode(activeMode);
-      applyMode(activeMode);
+      applyModeWithTransition(activeMode, control);
     });
   }
 };
