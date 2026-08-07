@@ -1,56 +1,109 @@
 <include src="layout.html">
   <template name="head">
     <title th:text="|${post.spec.title} - ${site.title}|">Post Title</title>
-    <script type="module" src="./js/post.ts"></script>
   </template>
 
-  <article>
-    <header class="article-header">
-      <h1 class="article-title" th:text="${post.spec.title}"></h1>
-      <div class="article-meta">
-        <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
-        <span th:if="${not #lists.isEmpty(post.categories)}">
-          &nbsp;·&nbsp;
-          <a
-            th:each="cat : ${post.categories}"
-            th:href="@{${cat.status.permalink}}"
-            th:text="${cat.spec.displayName}"
-            class="category"
-          ></a>
+  <article class="hardy-detail">
+    <header class="hardy-detail__header">
+      <p class="hardy-detail__eyebrow">文章</p>
+      <h1 class="hardy-detail__title" th:text="${post.spec.title}">Post title</h1>
+      <div class="hardy-detail__meta">
+        <time
+          th:if="${post.spec.publishTime}"
+          th:datetime="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+          th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+        >
+          2026-01-01
+        </time>
+        <span th:if="${post.stats?.visit != null}" th:text="|${post.stats.visit} 次浏览|">
+          0 次浏览
         </span>
+        <span th:if="${post.stats?.comment != null}" th:text="|${post.stats.comment} 条评论|">
+          0 条评论
+        </span>
+        <span th:if="${post.stats?.upvote != null}" th:text="|${post.stats.upvote} 次点赞|">
+          0 次点赞
+        </span>
+      </div>
+      <div class="hardy-detail__taxonomies" th:if="${not #lists.isEmpty(post.categories)}">
+        <a
+          class="hardy-detail__taxonomy"
+          th:each="cat : ${post.categories}"
+          th:href="@{${cat.status.permalink}}"
+          th:text="${cat.spec.displayName}"
+        >
+          Category
+        </a>
+      </div>
+      <div class="hardy-detail__cover" th:if="${post.spec.cover != null and post.spec.cover != ''}">
+        <img
+          data-hardy-media-image
+          th:src="${post.spec.cover}"
+          th:alt="${post.spec.title}"
+          decoding="async"
+        />
+        <span
+          class="hardy-detail__media-fallback"
+          data-hardy-media-fallback
+          aria-hidden="true"
+          hidden
+          >H</span
+        >
       </div>
     </header>
 
-    <div class="article-content" th:utext="${post.content.content}"></div>
-
-    <div class="article-tags" th:if="${not #lists.isEmpty(post.tags)}">
-      <a
-        th:each="tag : ${post.tags}"
-        th:href="@{${tag.status.permalink}}"
-        th:text="${tag.spec.displayName}"
-        class="tag"
-      ></a>
+    <div class="hardy-detail__body">
+      <div class="hardy-prose" data-hardy-prose th:utext="${post.content.content}"></div>
+      <aside class="hardy-toc" data-hardy-toc aria-label="Table of contents" hidden>
+        <p class="hardy-toc__title">目录</p>
+      </aside>
     </div>
 
-    <nav class="post-nav" th:with="cursor = ${postFinder.cursor(post.metadata.name)}">
-      <span>
+    <footer class="hardy-detail__footer">
+      <div class="hardy-detail__taxonomies" th:if="${not #lists.isEmpty(post.tags)}">
         <a
+          class="hardy-detail__taxonomy"
+          th:each="tag : ${post.tags}"
+          th:href="@{${tag.status.permalink}}"
+          th:text="${tag.spec.displayName}"
+        >
+          Tag
+        </a>
+      </div>
+      <div class="hardy-detail__actions hardy-share">
+        <button
+          class="hardy-shell-button"
+          type="button"
+          data-hardy-share
+          aria-describedby="hardy-share-status"
+          th:attr="data-hardy-share-url=${post.status.permalink},data-hardy-share-title=${post.spec.title}"
+        >
+          分享
+        </button>
+        <span id="hardy-share-status" class="hardy-share__status" aria-live="polite"></span>
+      </div>
+      <nav class="hardy-post-neighbors" th:with="cursor = ${postFinder.cursor(post.metadata.name)}">
+        <a
+          class="hardy-post-neighbors__link"
           th:if="${cursor.hasPrevious()}"
           th:href="@{${cursor.previous.status.permalink}}"
-          th:text="|← ${cursor.previous.spec.title}|"
-        ></a>
-      </span>
-      <span>
+          th:text="|上一篇：${cursor.previous.spec.title}|"
+        >
+          上一篇
+        </a>
         <a
+          class="hardy-post-neighbors__link"
           th:if="${cursor.hasNext()}"
           th:href="@{${cursor.next.status.permalink}}"
-          th:text="|${cursor.next.spec.title} →|"
-        ></a>
-      </span>
-    </nav>
+          th:text="|下一篇：${cursor.next.spec.title}|"
+        >
+          下一篇
+        </a>
+      </nav>
+    </footer>
   </article>
 
-  <div th:if="${haloCommentEnabled}">
+  <section class="hardy-comments" th:if="${haloCommentEnabled}">
     <halo:comment group="content.halo.run" kind="Post" th:attr="name=${post.metadata.name}" />
-  </div>
+  </section>
 </include>

@@ -1,10 +1,25 @@
 {
+  "name": "theme-hardy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A clean, personal blog theme for Halo",
+  "homepage": "https://github.com/hardyz0517/theme-hardy#readme",
+  "bugs": {
+    "url": "https://github.com/hardyz0517/theme-hardy/issues"
+  },
+  "author": "Hardy",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hardyz0517/theme-hardy.git"
+  },
   "type": "module",
   "scripts": {
-    "build": "tsc && vp build && theme-package",
+    "build": "tsc && vp build && pnpm package",
     "build-only": "tsc && vp build",
     "dev": "vp build --watch",
-    "check": "vp check --fix",
+    "check": "vp check",
+    "check:fix": "vp check --fix",
+    "package": "node scripts/package-theme.mjs",
     "prepare": "vp config",
     "skills:update": "npx skills update"
   },
@@ -16,14 +31,5 @@
     "vite": "npm:@voidzero-dev/vite-plus-core@latest",
     "vite-plus": "latest"
   },
-  "packageManager": "pnpm@10.33.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ],
-    "overrides": {
-      "vite": "npm:@voidzero-dev/vite-plus-core@latest",
-      "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
-    }
-  }
+  "packageManager": "pnpm@10.33.0"
 }

@@ -27,3 +27,6 @@ dist-ssr
 .gradle
 build
 templates
+
+# Public-site research snapshots are local references only.
+research/ryanc.cc/raw/

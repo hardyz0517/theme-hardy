@@ -1,0 +1,27 @@
+.hardy-page-heading {
+  margin-block-end: 32px;
+}
+
+.hardy-page-heading__eyebrow {
+  margin: 0 0 var(--hardy-space-2);
+  color: var(--hardy-color-subtle);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.hardy-page-heading__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.hardy-page-heading__description {
+  max-width: 680px;
+  margin: var(--hardy-space-3) 0 0;
+  color: var(--hardy-color-muted);
+  font-size: 15px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}

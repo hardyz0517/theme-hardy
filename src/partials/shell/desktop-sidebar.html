@@ -1,0 +1,87 @@
+<aside class="hardy-sidebar" aria-label="站点侧栏" th:with="menu = ${menuFinder.getPrimary()}">
+  <div class="hardy-sidebar__tools" aria-label="站点工具">
+    <button
+      class="hardy-sidebar__icon-button"
+      type="button"
+      data-hardy-color-scheme-toggle
+      aria-label="切换颜色模式"
+      title="切换颜色模式"
+    >
+      <span class="hardy-sidebar__icon" aria-hidden="true">◐</span>
+      <span class="hardy-sidebar__tool-label" data-hardy-color-scheme-label>自动</span>
+    </button>
+    <button
+      class="hardy-sidebar__icon-button"
+      type="button"
+      data-hardy-search-trigger
+      aria-label="搜索"
+      title="搜索"
+      th:if="${pluginFinder.available('PluginSearchWidget')}"
+    >
+      <span class="hardy-sidebar__icon" aria-hidden="true">⌕</span>
+      <span class="hardy-sidebar__tool-label">搜索</span>
+    </button>
+  </div>
+
+  <a class="hardy-brand" th:href="@{/}">
+    <span class="hardy-brand__avatar" aria-hidden="true">
+      <img th:if="${site.logo}" th:src="${site.logo}" th:alt="${site.title}" />
+      <span th:unless="${site.logo}">H</span>
+    </span>
+    <span>
+      <span class="hardy-brand__title" th:text="${site.title}">Site Title</span>
+      <span class="hardy-brand__subtitle" th:if="${site.subtitle}" th:text="${site.subtitle}"
+        >Site subtitle</span
+      >
+    </span>
+  </a>
+
+  <div class="hardy-socials" aria-label="社交链接">
+    <a
+      class="hardy-socials__link"
+      th:if="${!#strings.isEmpty(theme.config.basic?.social_github)}"
+      th:href="${theme.config.basic.social_github}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="GitHub"
+      title="GitHub"
+      >码</a
+    >
+    <a
+      class="hardy-socials__link"
+      th:if="${!#strings.isEmpty(theme.config.basic?.social_email)}"
+      th:href="${'mailto:' + theme.config.basic.social_email}"
+      aria-label="邮箱"
+      title="邮箱"
+      >邮</a
+    >
+    <a
+      class="hardy-socials__link"
+      th:if="${!#strings.isEmpty(theme.config.basic?.social_website)}"
+      th:href="${theme.config.basic.social_website}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="个人网站"
+      title="个人网站"
+      >站</a
+    >
+  </div>
+
+  <nav
+    class="hardy-nav"
+    aria-label="主导航"
+    th:if="${menu?.menuItems != null and !#lists.isEmpty(menu.menuItems)}"
+  >
+    <ul class="hardy-nav__list">
+      <li th:each="item : ${menu.menuItems}">
+        <a
+          class="hardy-nav__link"
+          th:href="@{${item.status.href}}"
+          th:text="${item.status.displayName}"
+          th:target="${item.spec.target?.value}"
+          th:rel="${item.spec.target?.value == '_blank' ? 'noopener noreferrer' : null}"
+        ></a>
+      </li>
+    </ul>
+  </nav>
+</aside>

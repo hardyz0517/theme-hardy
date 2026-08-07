@@ -1,0 +1,70 @@
+<div class="hardy-menu-mask" data-hardy-menu-mask hidden></div>
+<aside
+  id="hardy-mobile-menu"
+  class="hardy-mobile-menu"
+  data-hardy-menu
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="hardy-mobile-menu-title"
+  aria-hidden="true"
+  tabindex="-1"
+  th:with="menu = ${menuFinder.getPrimary()}"
+  hidden
+>
+  <div class="hardy-mobile-menu__top">
+    <button class="hardy-shell-button" type="button" data-hardy-menu-close>关闭</button>
+  </div>
+
+  <a class="hardy-brand" th:href="@{/}">
+    <span class="hardy-brand__avatar" aria-hidden="true">
+      <img th:if="${site.logo}" th:src="${site.logo}" th:alt="${site.title}" />
+      <span th:unless="${site.logo}">H</span>
+    </span>
+    <span>
+      <span id="hardy-mobile-menu-title" class="hardy-brand__title" th:text="${site.title}"
+        >Site Title</span
+      >
+      <span class="hardy-brand__subtitle" th:if="${site.subtitle}" th:text="${site.subtitle}">
+        Site subtitle
+      </span>
+    </span>
+  </a>
+
+  <nav
+    class="hardy-nav"
+    aria-label="Primary navigation"
+    th:if="${menu?.menuItems != null and !#lists.isEmpty(menu.menuItems)}"
+  >
+    <ul class="hardy-nav__list">
+      <li th:each="item : ${menu.menuItems}">
+        <a
+          class="hardy-nav__link"
+          th:href="@{${item.status.href}}"
+          th:text="${item.status.displayName}"
+          th:target="${item.spec.target?.value}"
+          th:rel="${item.spec.target?.value == '_blank' ? 'noopener noreferrer' : null}"
+        ></a>
+      </li>
+    </ul>
+  </nav>
+</aside>
+
+<noscript th:with="menu = ${menuFinder.getPrimary()}">
+  <nav
+    class="hardy-noscript-nav"
+    aria-label="Primary navigation"
+    th:if="${menu?.menuItems != null and !#lists.isEmpty(menu.menuItems)}"
+  >
+    <ul class="hardy-nav__list">
+      <li th:each="item : ${menu.menuItems}">
+        <a
+          class="hardy-nav__link"
+          th:href="@{${item.status.href}}"
+          th:text="${item.status.displayName}"
+          th:target="${item.spec.target?.value}"
+          th:rel="${item.spec.target?.value == '_blank' ? 'noopener noreferrer' : null}"
+        ></a>
+      </li>
+    </ul>
+  </nav>
+</noscript>

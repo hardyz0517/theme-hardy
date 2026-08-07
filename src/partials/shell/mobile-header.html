@@ -1,0 +1,25 @@
+<header class="hardy-mobile-header" data-hardy-mobile-header>
+  <button
+    class="hardy-shell-button"
+    type="button"
+    data-hardy-menu-trigger
+    aria-controls="hardy-mobile-menu"
+    aria-expanded="false"
+  >
+    菜单
+  </button>
+  <a class="hardy-mobile-header__title" th:href="@{/}" th:text="${site.title}">Site Title</a>
+  <div class="hardy-mobile-header__actions">
+    <button
+      class="hardy-shell-button"
+      type="button"
+      data-hardy-search-trigger
+      th:if="${pluginFinder.available('PluginSearchWidget')}"
+    >
+      搜索
+    </button>
+    <button class="hardy-shell-button" type="button" data-hardy-color-scheme-toggle>
+      <span data-hardy-color-scheme-label>自动</span>
+    </button>
+  </div>
+</header>

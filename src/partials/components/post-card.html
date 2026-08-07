@@ -1,0 +1,44 @@
+<li
+  class="hardy-post-card"
+  th:each="post : ${posts.items}"
+  th:classappend="${post.spec.cover != null and post.spec.cover != ''} ? ' hardy-post-card--with-cover' : ''"
+>
+  <a
+    class="hardy-post-card__media"
+    th:if="${post.spec.cover != null and post.spec.cover != ''}"
+    th:href="@{${post.status.permalink}}"
+    th:attr="aria-label=${post.spec.title}"
+  >
+    <img
+      data-hardy-media-image
+      th:src="${post.spec.cover}"
+      th:alt="${post.spec.title}"
+      loading="lazy"
+      decoding="async"
+    />
+    <span class="hardy-post-card__placeholder" data-hardy-media-fallback aria-hidden="true" hidden
+      >H</span
+    >
+  </a>
+  <div class="hardy-post-card__body">
+    <h2 class="hardy-post-card__title">
+      <a
+        class="hardy-post-card__title-link"
+        th:href="@{${post.status.permalink}}"
+        th:text="${post.spec.title}"
+      >
+        Post title
+      </a>
+    </h2>
+    <div class="hardy-post-card__meta">
+      <include src="components/post-meta.html"></include>
+    </div>
+    <p
+      class="hardy-post-card__excerpt"
+      th:if="${post.status.excerpt}"
+      th:text="${post.status.excerpt}"
+    >
+      Post excerpt.
+    </p>
+  </div>
+</li>

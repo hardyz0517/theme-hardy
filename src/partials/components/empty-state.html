@@ -1,0 +1,10 @@
+<div class="hardy-empty-state">
+  <p class="hardy-empty-state__title" th:text="${hardyEmptyTitle}">暂无内容</p>
+  <p
+    class="hardy-empty-state__description"
+    th:if="${hardyEmptyDescription}"
+    th:text="${hardyEmptyDescription}"
+  >
+    请稍后再来看看。
+  </p>
+</div>

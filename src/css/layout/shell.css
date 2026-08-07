@@ -1,0 +1,109 @@
+.hardy-skip-link {
+  position: fixed;
+  inset-block-start: var(--hardy-space-3);
+  inset-inline-start: var(--hardy-space-3);
+  z-index: 100;
+  padding: var(--hardy-space-2) var(--hardy-space-4);
+  color: var(--hardy-color-accent-contrast);
+  background: var(--hardy-color-accent);
+  border-radius: var(--hardy-radius-sm);
+  transform: translateY(-160%);
+}
+
+.hardy-skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+.hardy-page {
+  min-height: 100vh;
+  transition: transform var(--hardy-duration-base) var(--hardy-ease-standard);
+}
+
+.is-menu-open .hardy-page {
+  transform: translateX(32px);
+}
+
+.hardy-shell {
+  display: block;
+  width: min(100%, var(--hardy-shell-max));
+  min-height: calc(100vh - 120px);
+  margin: 0 auto;
+  padding: calc(var(--hardy-mobile-header-height) + 52px) var(--hardy-space-5) 0;
+}
+
+.hardy-main {
+  min-width: 0;
+}
+
+.hardy-content {
+  width: min(100%, var(--hardy-content-measure));
+}
+
+.hardy-shell-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0 var(--hardy-space-2);
+  color: var(--hardy-color-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--hardy-radius-sm);
+  cursor: pointer;
+  transition:
+    color var(--hardy-duration-fast) var(--hardy-ease-standard),
+    border-color var(--hardy-duration-fast) var(--hardy-ease-standard),
+    background-color var(--hardy-duration-fast) var(--hardy-ease-standard);
+}
+
+.hardy-shell-button:hover {
+  color: var(--hardy-color-text);
+  background: color-mix(in srgb, var(--hardy-color-text) 6%, transparent);
+}
+
+.hardy-scroll-top {
+  position: fixed;
+  inset-inline-end: var(--hardy-space-5);
+  inset-block-end: var(--hardy-space-5);
+  z-index: 60;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+}
+
+.hardy-scroll-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+@media (min-width: 1024px) {
+  .hardy-page {
+    transform: none !important;
+  }
+
+  .hardy-shell {
+    display: grid;
+    grid-template-columns: minmax(240px, var(--hardy-sidebar-width)) minmax(
+        0,
+        var(--hardy-content-width)
+      );
+    gap: 0;
+    padding: 116px var(--hardy-space-8) 0;
+  }
+
+  .hardy-content {
+    max-width: var(--hardy-content-measure);
+    padding: 0 var(--hardy-space-8);
+  }
+
+  .hardy-scroll-top {
+    inset-inline-end: var(--hardy-space-10);
+    inset-block-end: var(--hardy-space-10);
+  }
+}

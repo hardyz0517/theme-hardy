@@ -3,18 +3,85 @@
     <title th:text="|${singlePage.spec.title} - ${site.title}|">Page Title</title>
   </template>
 
-  <article>
-    <header class="article-header">
-      <h1 class="article-title" th:text="${singlePage.spec.title}"></h1>
+  <article class="hardy-detail">
+    <header class="hardy-detail__header">
+      <p class="hardy-detail__eyebrow">页面</p>
+      <h1 class="hardy-detail__title" th:text="${singlePage.spec.title}">Page title</h1>
+      <div class="hardy-detail__meta">
+        <time
+          th:if="${singlePage.spec.publishTime}"
+          th:datetime="${#temporals.format(singlePage.spec.publishTime, 'yyyy-MM-dd')}"
+          th:text="${#temporals.format(singlePage.spec.publishTime, 'yyyy-MM-dd')}"
+        >
+          2026-01-01
+        </time>
+        <span
+          th:if="${singlePage.stats?.visit != null}"
+          th:text="|${singlePage.stats.visit} 次浏览|"
+        >
+          0 次浏览
+        </span>
+        <span
+          th:if="${singlePage.stats?.comment != null}"
+          th:text="|${singlePage.stats.comment} 条评论|"
+        >
+          0 条评论
+        </span>
+        <span
+          th:if="${singlePage.stats?.upvote != null}"
+          th:text="|${singlePage.stats.upvote} 次点赞|"
+        >
+          0 次点赞
+        </span>
+      </div>
+      <div
+        class="hardy-detail__cover"
+        th:if="${singlePage.spec.cover != null and singlePage.spec.cover != ''}"
+      >
+        <img
+          data-hardy-media-image
+          th:src="${singlePage.spec.cover}"
+          th:alt="${singlePage.spec.title}"
+          decoding="async"
+        />
+        <span
+          class="hardy-detail__media-fallback"
+          data-hardy-media-fallback
+          aria-hidden="true"
+          hidden
+          >H</span
+        >
+      </div>
     </header>
-    <div class="article-content" th:utext="${singlePage.content.content}"></div>
+
+    <div class="hardy-detail__body">
+      <div class="hardy-prose" data-hardy-prose th:utext="${singlePage.content.content}"></div>
+      <aside class="hardy-toc" data-hardy-toc aria-label="Table of contents" hidden>
+        <p class="hardy-toc__title">目录</p>
+      </aside>
+    </div>
+
+    <footer class="hardy-detail__footer">
+      <div class="hardy-detail__actions hardy-share">
+        <button
+          class="hardy-shell-button"
+          type="button"
+          data-hardy-share
+          aria-describedby="hardy-share-status"
+          th:attr="data-hardy-share-url=${singlePage.status.permalink},data-hardy-share-title=${singlePage.spec.title}"
+        >
+          分享
+        </button>
+        <span id="hardy-share-status" class="hardy-share__status" aria-live="polite"></span>
+      </div>
+    </footer>
   </article>
 
-  <div th:if="${haloCommentEnabled}">
+  <section class="hardy-comments" th:if="${haloCommentEnabled}">
     <halo:comment
       group="content.halo.run"
       kind="SinglePage"
       th:attr="name=${singlePage.metadata.name}"
     />
-  </div>
+  </section>
 </include>

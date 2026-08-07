@@ -1,0 +1,80 @@
+<include src="layout.html">
+  <template name="head">
+    <title th:text="|${linksTitle ?: '友链'} - ${site.title}|">友链</title>
+  </template>
+
+  <th:block th:if="${pluginFinder.available('PluginLinks')}">
+    <section class="hardy-list-page hardy-links-page">
+      <div th:with="hardyPageEyebrow='友链',hardyPageTitle=${linksTitle ?: '友链'}">
+        <include src="components/page-heading.html"></include>
+      </div>
+
+      <nav
+        class="hardy-links-groups"
+        aria-label="Link groups"
+        th:if="${simpleGroups != null and !#lists.isEmpty(simpleGroups)}"
+      >
+        <a
+          class="hardy-links-groups__link"
+          th:classappend="${group == null or group == ''} ? ' is-active'"
+          th:href="@{/links}"
+          th:aria-current="${group == null or group == ''} ? 'page' : null"
+          >All links</a
+        >
+        <a
+          class="hardy-links-groups__link"
+          th:each="linkGroup : ${simpleGroups}"
+          th:classappend="${group == linkGroup.metadata.name} ? ' is-active'"
+          th:href="@{/links(group=${linkGroup.metadata.name})}"
+          th:aria-current="${group == linkGroup.metadata.name} ? 'page' : null"
+          th:text="${linkGroup.spec.displayName}"
+          >Group</a
+        >
+      </nav>
+
+      <div
+        th:if="${#lists.isEmpty(links)}"
+        th:with="hardyEmptyTitle='暂无友链',hardyEmptyDescription='添加后的友链会显示在这里。'"
+      >
+        <include src="components/empty-state.html"></include>
+      </div>
+
+      <div th:if="${group == null or group == ''}" class="hardy-links-groups-list">
+        <section
+          class="hardy-links-group"
+          th:each="linkGroup : ${groups}"
+          th:with="hardyLinks=${linkGroup.links}"
+          th:if="${linkGroup.links != null and !#lists.isEmpty(linkGroup.links)}"
+        >
+          <h2
+            class="hardy-links-group__title"
+            th:text="${linkGroup.spec?.displayName ?: 'Other links'}"
+          >
+            Other links
+          </h2>
+          <ul class="hardy-links-grid">
+            <include src="components/link-card.html"></include>
+          </ul>
+        </section>
+      </div>
+
+      <section
+        class="hardy-links-group hardy-links-group--filtered"
+        th:with="hardyLinks=${links}"
+        th:if="${group != null and group != '' and !#lists.isEmpty(links)}"
+      >
+        <h2 class="hardy-links-group__title" th:text="${linksTitle ?: '友链'}">友链</h2>
+        <ul class="hardy-links-grid">
+          <include src="components/link-card.html"></include>
+        </ul>
+      </section>
+    </section>
+
+    <section
+      class="hardy-comments hardy-links-comments"
+      th:if="${haloCommentEnabled and pluginName != null and pluginName != ''}"
+    >
+      <halo:comment group="plugin.halo.run" kind="Plugin" th:attr="name=${pluginName}" />
+    </section>
+  </th:block>
+</include>

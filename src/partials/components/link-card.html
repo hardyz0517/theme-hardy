@@ -1,0 +1,46 @@
+<li class="hardy-link-card" th:each="link : ${hardyLinks}">
+  <a
+    class="hardy-link-card__link"
+    th:href="${link.spec.url}"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <span class="hardy-link-card__logo" aria-hidden="true">
+      <img
+        data-hardy-media-image
+        th:if="${link.spec.logo != null and link.spec.logo != ''}"
+        th:src="${link.spec.logo}"
+        th:alt="${link.spec.displayName}"
+        width="48"
+        height="48"
+        loading="lazy"
+        decoding="async"
+      />
+      <span
+        class="hardy-link-card__logo-fallback"
+        data-hardy-media-fallback
+        th:if="${link.spec.logo != null and link.spec.logo != ''}"
+        aria-hidden="true"
+        hidden
+        >H</span
+      >
+      <span
+        class="hardy-link-card__logo-fallback"
+        th:unless="${link.spec.logo != null and link.spec.logo != ''}"
+        aria-hidden="true"
+        >H</span
+      >
+    </span>
+    <span class="hardy-link-card__body">
+      <span class="hardy-link-card__name" th:text="${link.spec.displayName ?: 'Unnamed link'}"
+        >Link name</span
+      >
+      <span
+        class="hardy-link-card__description"
+        th:if="${link.spec.description != null and link.spec.description != ''}"
+        th:text="${link.spec.description}"
+        >Link description</span
+      >
+    </span>
+  </a>
+</li>

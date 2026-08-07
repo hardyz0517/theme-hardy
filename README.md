@@ -1,76 +1,70 @@
-# Theme Vite Starter
+# Hardy
 
-面向 [Halo](https://www.halo.run/) 的主题脚手架：在 `src/` 中编写模板与前端资源，经构建生成 Halo 实际读取的 `templates/` 目录。
+Hardy 是一套供个人长期使用的 Halo 博客主题，采用 Thymeleaf、Vite、TypeScript 和 CSS 开发。
 
-官方主题开发指南：<https://docs.halo.run/developer-guide/theme/prepare>
+项目以简洁、内容优先的博客体验为目标。公开站点仅用于研究布局、响应式行为和交互逻辑；主题使用独立实现，不包含参考站点的品牌、文案、图标或资源。
 
-## 技术栈
+## 开发环境
 
-| 类别     | 说明                                                                                                                                                                                                  |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 运行时   | Halo 使用 **Thymeleaf** 渲染主题；模板变量与 Finder API 随 Halo 版本演进，请以[官方文档](https://docs.halo.run/developer-guide/theme/prepare)为准。                                                   |
-| 构建     | Vite，同时集成 [Vite Plus](https://viteplus.dev/)，集成格式化、Lint 等功能                                                                                                                            |
-| 语言     | **TypeScript**（`tsc` 参与 `build` 脚本）                                                                                                                                                             |
-| 主题插件 | [`@halo-dev/vite-plugin-halo-theme`](https://www.npmjs.com/package/@halo-dev/vite-plugin-halo-theme) — 源码见 [halo-sigs/vite-plugin-halo-theme](https://github.com/halo-sigs/vite-plugin-halo-theme) |
-| 打包发布 | [`@halo-dev/theme-package-cli`](https://github.com/halo-dev/theme-package-cli) — 将主题打成 ZIP 供控制台上传                                                                                          |
-| 包管理   | **pnpm**（版本见 `package.json` 的 `packageManager`）                                                                                                                                                 |
-
-## 目录结构
-
-- **`src/` 是源码目录**：在此维护 `.html` 页面与 `partials/` 片段、`css/`、`js/`（含 TS）等。插件在 **Vite 构建时** 处理 `<include>` / `<slot>` 等语法（与服务器上 **Thymeleaf 运行时** 互不替代，可同时使用）。
-- **`templates/` 是构建产物**：Halo 只认主题根目录下的 `templates/`（内含页面 HTML 与 `templates/assets/` 等）。**不要**把 `src/` 当作 Halo 直接读取的路径；开发或发版前需执行构建，使 `templates/` 与当前源码一致。
-
-```
-.
-├── src/                 # 源码：页面 HTML、partials、css、js
-├── public/              # 可选；复制到 templates/assets/
-├── templates/           # 构建生成
-├── theme.yaml           # 主题元数据（必填）
-├── settings.yaml        # 控制台主题设置表单（可选）
-├── vite.config.ts
-└── package.json
-```
-
-### `@halo-dev/vite-plugin-halo-theme`
-
-1. **多页入口**：自动将 `src/` 下（除 `src/partials/` 外）的 `.html` 作为入口，输出到 `templates/` 下同名文件（例如 `src/index.html` → `templates/index.html`）。
-2. **静态资源**：`src/` 中的 CSS/JS 由 Vite 打包进 `templates/assets/`；`public/` 中的文件会原样复制到 `templates/assets/`（不经打包）。
-3. **模板复用**：支持构建期 `<include>`、`<slot>`，减轻纯 Thymeleaf 片段的重复书写。
-4. **资源路径约定**：所有 HTML（含 `partials`）里引用静态资源时，路径按 **`src/` 根** 解析，而不是按当前文件所在子目录；说明见 [vite-plugin-halo-theme](https://github.com/halo-sigs/vite-plugin-halo-theme)。
-
-## 开发
+- Halo `>=2.0.0`
+- Node.js 24（与发布工作流一致）
+- pnpm 10.33.0
 
 ```bash
-git clone git@github.com:halo-dev/theme-vite-starter.git ~/halo2-dev/themes/theme-vite-starter
-cd ~/halo2-dev/themes/theme-vite-starter
+git clone git@github.com:hardyz0517/theme-hardy.git
+cd theme-hardy
 pnpm install
 pnpm dev
 ```
 
-`pnpm dev` 等价于对主题执行 `vp build --watch`：修改 `src/` 后会持续重新生成 `templates/`。将主题目录链到或复制到 Halo 的 `themes/<metadata.name>/` 后，在控制台安装并启用主题即可预览。
+`pnpm dev` 以监听模式构建主题。开发 Halo 实例应关闭 Thymeleaf 缓存，并将本目录放置或链接到 Halo 的 `themes/theme-hardy/`。
 
-开发 Halo 端建议关闭 Thymeleaf 缓存（例如环境变量 `SPRING_THYMELEAF_CACHE=false` 或配置 `spring.thymeleaf.cache: false`），便于模板热更新调试。
+## 目录
 
-## 构建与打包
+- `src/`：人工维护的页面模板、partials、CSS 和 TypeScript。
+- `templates/`：Vite 生成、Halo 实际读取的模板和静态资源；不要手工修改。
+- `theme.yaml`：主题元数据。
+- `settings.yaml`：Halo 控制台中的主题设置表单。
+- `research/`：参考站点分析；`raw/` 快照仅供本地研究且不提交。
 
-```bash
-pnpm build
-```
+`@halo-dev/vite-plugin-halo-theme` 会把 `src/partials/` 中的 `<include>` / `<slot>` 在构建期展开。Thymeleaf 表达式仍由 Halo 在请求时渲染。
 
-该命令会执行 TypeScript 检查、`vp build` 生成 `templates/`，并调用 `theme-package` 生成可分发的 ZIP。默认会打包 `templates/`、`theme.yaml` / `settings.yaml` 等必要文件，详见 [theme-package-cli](https://github.com/halo-dev/theme-package-cli)。
+## 当前状态
 
-仅需要产物目录、不需要 ZIP 时：
+主题当前以 `0.1.0` 作为个人测试版。已在 Halo `2.25.4` 测试站验证核心列表、文章、独立页面、作者和已启用的 Moments、Links、Photos 路由；`theme.yaml` 中的 `>=2.0.0` 下限尚未在 Halo `2.0.0` 实例上实机验证，不应视为已完成的兼容性证明。
 
-```bash
-pnpm build-only
-```
+已验证的可选插件包括 Search Widget、Comment Widget、Moments、Links 和 Photos。Shiki 代码块与 KaTeX MathML fixture 已在前台观察到；hyperlink-card 和插件缺失态仍在持续验证。插件未安装时，主题会隐藏依赖其能力的入口或保留核心内容布局。
 
-## 其他脚本
+## 设置
 
-| 命令         | 作用                                     |
-| ------------ | ---------------------------------------- |
-| `pnpm check` | `vp check --fix`（执行格式化和代码检查） |
+控制台中的 `Basic` 组提供自定义页脚文本，`Appearance` 组提供 `auto`、`light`、`dark` 三种默认颜色模式。访客在浏览器中做出的颜色模式选择优先于主题默认值；设置名称和 ConfigMap 分别为 `theme-hardy-setting` 与 `theme-hardy-configMap`。
 
-## Agent Skills
+## 已知限制
 
-仓库在 `.agents/skills/` 下内置了 **Halo 主题开发** 相关的 Agent Skill（例如 `halo-theme-dev`），整理了 Thymeleaf 要点、Finder API、`theme.yaml` / `settings.yaml`、vite 插件用法等参考材料。若在 Cursor 等支持 Agent Skills 的环境里开发，启用后可让 AI 更贴合 Halo 主题的约定来辅助编写与修改主题。
+- 发布脚本会在临时 staging 目录中调用官方打包 CLI，发布 ZIP 不包含开发用的 `pnpm-workspace.yaml`。
+- 完整的多视口浅色/深色视觉矩阵、无障碍人工审查、Halo `2.0.0` 兼容性和可选插件缺失/禁用态尚未全部完成。
+- 参考站点快照仅保存在本地 `research/`，不会被主题运行时或发布包使用。
+
+## 命令
+
+| 命令                 | 作用                                         |
+| -------------------- | -------------------------------------------- |
+| `pnpm dev`           | 监听源码并持续生成 `templates/`              |
+| `pnpm check`         | 只读执行格式、Lint 和类型检查                |
+| `pnpm check:fix`     | 自动修复格式和 Lint 问题                     |
+| `pnpm build-only`    | 类型检查并生成 `templates/`                  |
+| `pnpm build`         | 构建主题并在 `dist/` 生成发布 ZIP            |
+| `pnpm package`       | 从现有 `templates/` 生成不含开发元数据的 ZIP |
+| `pnpm prepare`       | 配置 Vite Plus Git hooks 与 Agent 集成       |
+| `pnpm skills:update` | 更新仓库内的 Agent Skills                    |
+
+官方文档：<https://docs.halo.run/developer-guide/theme/prepare>
+
+实现文档：
+
+- [Implementation specification](docs/implementation-spec.md)
+- [Detailed implementation plan](docs/implementation-plan.md)
+
+## License
+
+[GPL-3.0](LICENSE)

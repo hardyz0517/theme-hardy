@@ -1,0 +1,79 @@
+<include src="layout.html">
+  <template name="head">
+    <title th:text="|${title ?: '图库'} - ${site.title}|">图库</title>
+  </template>
+
+  <th:block th:if="${pluginFinder.available('PluginPhotos')}">
+    <section class="hardy-list-page hardy-photos-page">
+      <div th:with="hardyPageEyebrow='图库',hardyPageTitle=${title ?: '图库'}">
+        <include src="components/page-heading.html"></include>
+      </div>
+
+      <nav
+        class="hardy-photos-groups"
+        aria-label="Photo groups"
+        th:if="${groups != null and !#lists.isEmpty(groups)}"
+      >
+        <a class="hardy-photos-groups__link" th:href="@{/photos}">All</a>
+        <a
+          class="hardy-photos-groups__link"
+          th:each="photoGroup : ${groups}"
+          th:href="@{/photos(group=${photoGroup.metadata.name})}"
+          th:text="${photoGroup.spec.displayName ?: photoGroup.metadata.name}"
+          >Group</a
+        >
+      </nav>
+
+      <div
+        th:if="${photos == null or #lists.isEmpty(photos.items)}"
+        th:with="hardyEmptyTitle='暂无照片',hardyEmptyDescription='发布后的照片会显示在这里。'"
+      >
+        <include src="components/empty-state.html"></include>
+      </div>
+
+      <ul class="hardy-photos-grid" th:if="${photos != null and !#lists.isEmpty(photos.items)}">
+        <li class="hardy-photo-card" th:each="photo : ${photos.items}">
+          <a
+            class="hardy-photo-card__link"
+            th:href="@{/photos/{name}(name=${photo.metadata.name})}"
+          >
+            <span class="hardy-photo-card__media">
+              <img
+                data-hardy-media-image
+                th:if="${photo.spec?.cover ?: photo.spec?.url}"
+                th:src="${photo.spec.cover ?: photo.spec.url}"
+                th:alt="${photo.spec.displayName ?: photo.metadata.name}"
+                loading="lazy"
+                decoding="async"
+              />
+              <span
+                class="hardy-photo-card__fallback"
+                data-hardy-media-fallback
+                aria-hidden="true"
+                hidden
+                >H</span
+              >
+            </span>
+            <span class="hardy-photo-card__body">
+              <span
+                class="hardy-photo-card__title"
+                th:text="${photo.spec.displayName ?: photo.metadata.name}"
+                >Photo</span
+              >
+              <span
+                class="hardy-photo-card__description"
+                th:if="${photo.spec?.description}"
+                th:text="${photo.spec.description}"
+                >Description</span
+              >
+            </span>
+          </a>
+        </li>
+      </ul>
+
+      <div th:with="hardyPagination=${photos}">
+        <include src="components/pagination.html"></include>
+      </div>
+    </section>
+  </th:block>
+</include>

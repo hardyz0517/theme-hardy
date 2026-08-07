@@ -1,32 +1,52 @@
 <include src="layout.html">
   <template name="head">
-    <title th:text="|Archives - ${site.title}|">Archives</title>
+    <title th:text="|归档 - ${site.title}|">归档</title>
   </template>
 
-  <h1>Archives</h1>
-
-  <th:block th:each="archive : ${archives.items}">
-    <div class="archive-year">
-      <h2 th:text="${archive.year}"></h2>
-      <th:block th:each="month : ${archive.months}">
-        <h3 th:text="|${archive.year}-${month.month}|"></h3>
-        <ul class="post-list">
-          <li class="post-item" th:each="post : ${month.posts}">
-            <h2 class="post-title">
-              <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}"></a>
-            </h2>
-            <p class="post-meta">
-              <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
-            </p>
-          </li>
-        </ul>
-      </th:block>
+  <section class="hardy-list-page">
+    <div th:with="hardyPageTitle='归档'">
+      <include src="components/page-heading.html"></include>
     </div>
-  </th:block>
 
-  <nav class="pagination" th:if="${archives.hasPrevious() || archives.hasNext()}">
-    <a th:if="${archives.hasPrevious()}" th:href="@{${archives.prevUrl}}">Previous</a>
-    <span th:text="|${archives.page} / ${archives.totalPages}|"></span>
-    <a th:if="${archives.hasNext()}" th:href="@{${archives.nextUrl}}">Next</a>
-  </nav>
+    <div
+      th:if="${#lists.isEmpty(archives.items)}"
+      th:with="hardyEmptyTitle='暂无归档',hardyEmptyDescription='已发布文章会按时间归档在这里。'"
+    >
+      <include src="components/empty-state.html"></include>
+    </div>
+
+    <div class="hardy-archive-list" th:unless="${#lists.isEmpty(archives.items)}">
+      <section class="hardy-archive-year" th:each="archive : ${archives.items}">
+        <h2 class="hardy-archive-year__title" th:text="${archive.year}">2026</h2>
+        <section class="hardy-archive-month" th:each="month : ${archive.months}">
+          <h3 class="hardy-archive-month__title" th:text="|${archive.year}-${month.month}|">
+            2026-01
+          </h3>
+          <ul class="hardy-archive-posts">
+            <li class="hardy-archive-post" th:each="post : ${month.posts}">
+              <a
+                class="hardy-archive-post__link"
+                th:href="@{${post.status.permalink}}"
+                th:text="${post.spec.title}"
+              >
+                Post title
+              </a>
+              <time
+                class="hardy-archive-post__date"
+                th:if="${post.spec.publishTime}"
+                th:datetime="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+                th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+              >
+                2026-01-01
+              </time>
+            </li>
+          </ul>
+        </section>
+      </section>
+    </div>
+
+    <div th:with="hardyPagination=${archives}">
+      <include src="components/pagination.html"></include>
+    </div>
+  </section>
 </include>

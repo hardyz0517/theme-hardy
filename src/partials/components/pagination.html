@@ -1,0 +1,26 @@
+<nav
+  class="hardy-pagination"
+  aria-label="Pagination"
+  th:if="${hardyPagination != null && (hardyPagination.hasPrevious() || hardyPagination.hasNext())}"
+>
+  <a
+    class="hardy-pagination__link"
+    th:if="${hardyPagination.hasPrevious()}"
+    th:href="@{${hardyPagination.prevUrl}}"
+  >
+    上一页
+  </a>
+  <span
+    class="hardy-pagination__status"
+    th:text="|${hardyPagination.page} / ${hardyPagination.totalPages}|"
+  >
+    1 / 1
+  </span>
+  <a
+    class="hardy-pagination__link"
+    th:if="${hardyPagination.hasNext()}"
+    th:href="@{${hardyPagination.nextUrl}}"
+  >
+    下一页
+  </a>
+</nav>

@@ -1,0 +1,21 @@
+.hardy-post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hardy-space-2) var(--hardy-space-3);
+  align-items: center;
+  color: var(--hardy-color-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.hardy-post-meta__item {
+  min-width: 0;
+}
+
+.hardy-post-meta__link {
+  color: var(--hardy-color-muted);
+}
+
+.hardy-post-meta__link:hover {
+  color: var(--hardy-color-accent);
+}

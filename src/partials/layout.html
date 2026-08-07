@@ -1,42 +1,64 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html
+  lang="zh-CN"
+  data-color-scheme="auto"
+  xmlns:th="http://www.thymeleaf.org"
+  th:attr="data-color-scheme=${theme.config.appearance?.color_scheme ?: 'auto'},data-hardy-configured-color-scheme=${theme.config.appearance?.color_scheme ?: 'auto'}"
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <slot name="head">
       <title th:text="${site.title}">Site Title</title>
     </slot>
+    <script th:inline="javascript">
+      (() => {
+        const validModes = ["auto", "light", "dark"];
+        const configuredMode = /*[[${theme.config.appearance?.color_scheme ?: 'auto'}]]*/ "auto";
+        let storedMode = null;
+        try {
+          storedMode = window.localStorage.getItem("hardy:color-scheme");
+        } catch {
+          storedMode = null;
+        }
+        const mode = validModes.includes(storedMode)
+          ? storedMode
+          : validModes.includes(configuredMode)
+            ? configuredMode
+            : "auto";
+        document.documentElement.dataset.colorScheme = mode;
+        document.documentElement.dataset.hardyColorScheme = mode;
+      })();
+    </script>
     <script type="module" src="./js/main.ts"></script>
   </head>
   <body>
-    <header class="site-header">
-      <div class="container">
-        <a class="site-title" th:href="@{/}" th:text="${site.title}">Site Title</a>
-        <nav class="site-nav" th:with="menu = ${menuFinder.getPrimary()}">
-          <ul>
-            <li th:each="item : ${menu.menuItems}">
-              <a
-                th:href="@{${item.status.href}}"
-                th:text="${item.status.displayName}"
-                th:target="${item.spec.target?.value}"
-              ></a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <a class="hardy-skip-link" href="#hardy-main">Skip to content</a>
+    <include src="shell/mobile-header.html"></include>
+    <include src="shell/mobile-menu.html"></include>
 
-    <main class="site-main">
-      <div class="container">
-        <slot />
+    <div class="hardy-page" data-hardy-page>
+      <div class="hardy-shell">
+        <include src="shell/desktop-sidebar.html"></include>
+        <main id="hardy-main" class="hardy-main" tabindex="-1">
+          <div class="hardy-content">
+            <slot />
+          </div>
+        </main>
       </div>
-    </main>
 
-    <footer class="site-footer">
-      <div class="container">
-        <p th:text="${theme.config.basic.custom_footer ?: site.title}"></p>
-        <halo:footer />
-      </div>
-    </footer>
+      <include src="shell/footer.html"></include>
+    </div>
+
+    <button
+      class="hardy-shell-button hardy-scroll-top"
+      type="button"
+      data-hardy-scroll-top
+      aria-label="返回顶部"
+      aria-hidden="true"
+      hidden
+    >
+      顶部
+    </button>
   </body>
 </html>

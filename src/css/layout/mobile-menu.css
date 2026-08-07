@@ -1,0 +1,90 @@
+.hardy-mobile-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  display: flex;
+  height: var(--hardy-mobile-header-height);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hardy-space-3);
+  padding: 0 var(--hardy-space-5);
+  background: color-mix(in srgb, var(--hardy-color-bg) 88%, transparent);
+  border-bottom: 1px solid var(--hardy-color-border);
+  backdrop-filter: blur(16px);
+}
+
+.hardy-mobile-header__title {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hardy-mobile-header__actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: var(--hardy-space-2);
+}
+
+.hardy-menu-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: var(--hardy-color-overlay);
+  opacity: 0;
+  transition: opacity var(--hardy-duration-base) var(--hardy-ease-standard);
+}
+
+.hardy-menu-mask.is-open {
+  opacity: 1;
+}
+
+.hardy-noscript-nav {
+  position: fixed;
+  inset-block-start: var(--hardy-mobile-header-height);
+  inset-inline: 0;
+  z-index: 55;
+  padding: var(--hardy-space-3) var(--hardy-space-5);
+  background: var(--hardy-color-page);
+  border-block-end: 1px solid var(--hardy-color-border);
+}
+
+.hardy-noscript-nav .hardy-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hardy-space-1) var(--hardy-space-3);
+}
+
+.hardy-mobile-menu {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 80;
+  width: var(--hardy-mobile-drawer-width);
+  padding: var(--hardy-space-6);
+  overflow-y: auto;
+  color: var(--hardy-color-text);
+  background: var(--hardy-color-surface);
+  box-shadow: var(--hardy-shadow-drawer);
+  transform: translateX(-100%);
+  transition: transform var(--hardy-duration-base) var(--hardy-ease-standard);
+}
+
+.hardy-mobile-menu.is-open {
+  transform: translateX(0);
+}
+
+.hardy-mobile-menu__top {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-end: var(--hardy-space-6);
+}
+
+@media (min-width: 1024px) {
+  .hardy-mobile-header,
+  .hardy-mobile-menu,
+  .hardy-menu-mask,
+  .hardy-noscript-nav {
+    display: none !important;
+  }
+}

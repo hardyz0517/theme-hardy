@@ -1,0 +1,36 @@
+html {
+  background: var(--hardy-color-bg);
+}
+
+body {
+  font-family: var(--hardy-font-sans);
+  line-height: 1.65;
+  color: var(--hardy-color-text);
+  background: var(--hardy-color-bg);
+  letter-spacing: 0;
+}
+
+body.is-menu-open {
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  text-decoration-thickness: from-font;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--hardy-color-accent);
+}
+
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid var(--hardy-color-focus);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: var(--hardy-color-accent-contrast);
+  background: var(--hardy-color-accent);
+}

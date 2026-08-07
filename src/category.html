@@ -3,12 +3,26 @@
     <title th:text="|${category.spec.displayName} - ${site.title}|">Category Archive</title>
   </template>
 
-  <h1 th:text="|Category: ${category.spec.displayName}|"></h1>
-  <p th:if="${category.spec.description}" th:text="${category.spec.description}"></p>
+  <section class="hardy-list-page">
+    <div
+      th:with="hardyPageEyebrow='分类',hardyPageTitle=${category.spec.displayName},hardyPageDescription=${category.spec.description}"
+    >
+      <include src="components/page-heading.html"></include>
+    </div>
 
-  <ul class="post-list">
-    <include src="post-card.html"></include>
-  </ul>
+    <div
+      th:if="${#lists.isEmpty(posts.items)}"
+      th:with="hardyEmptyTitle='该分类暂无文章',hardyEmptyDescription='归入此分类的文章会显示在这里。'"
+    >
+      <include src="components/empty-state.html"></include>
+    </div>
 
-  <include src="pagination.html"></include>
+    <ul class="hardy-post-list" th:unless="${#lists.isEmpty(posts.items)}">
+      <include src="components/post-card.html"></include>
+    </ul>
+
+    <div th:with="hardyPagination=${posts}">
+      <include src="components/pagination.html"></include>
+    </div>
+  </section>
 </include>

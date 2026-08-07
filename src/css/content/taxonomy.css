@@ -1,0 +1,46 @@
+.hardy-taxonomy-list {
+  display: grid;
+  gap: var(--hardy-space-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.hardy-taxonomy-list__item {
+  min-width: 0;
+  padding: var(--hardy-space-4) 0;
+  border-bottom: 1px solid var(--hardy-color-border);
+}
+
+.hardy-taxonomy-list__link {
+  display: flex;
+  gap: var(--hardy-space-3);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.hardy-taxonomy-list__name {
+  min-width: 0;
+  color: var(--hardy-color-text);
+  font-size: 18px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.hardy-taxonomy-list__count {
+  flex: 0 0 auto;
+  color: var(--hardy-color-muted);
+  font-size: 14px;
+}
+
+.hardy-taxonomy-list__description {
+  margin: var(--hardy-space-2) 0 0;
+  color: var(--hardy-color-muted);
+  font-size: 14px;
+}
+
+.hardy-taxonomy-list__children {
+  margin-block-start: var(--hardy-space-3);
+  padding-inline-start: var(--hardy-space-5);
+  border-inline-start: 1px solid var(--hardy-color-border);
+}

@@ -1,0 +1,48 @@
+<include src="layout.html">
+  <template name="head">
+    <title th:text="|${photo.spec.displayName ?: 'Photo'} - ${site.title}|">Photo</title>
+  </template>
+
+  <th:block th:if="${pluginFinder.available('PluginPhotos')}">
+    <article class="hardy-detail hardy-photo-detail">
+      <header class="hardy-detail__header">
+        <p class="hardy-detail__eyebrow">Photo</p>
+        <h1 class="hardy-detail__title" th:text="${photo.spec.displayName ?: photo.metadata.name}">
+          Photo
+        </h1>
+      </header>
+      <figure class="hardy-photo-detail__figure">
+        <img
+          data-hardy-media-image
+          th:if="${photo.spec?.cover ?: photo.spec?.url}"
+          th:src="${photo.spec.cover ?: photo.spec.url}"
+          th:alt="${photo.spec.displayName ?: photo.metadata.name}"
+          decoding="async"
+        />
+        <span class="hardy-photo-detail__fallback" data-hardy-media-fallback hidden>H</span>
+        <figcaption th:if="${photo.spec?.description}" th:text="${photo.spec.description}">
+          Description
+        </figcaption>
+      </figure>
+      <nav class="hardy-post-neighbors" th:if="${prev != null or next != null}">
+        <a
+          class="hardy-post-neighbors__link"
+          th:if="${prev != null}"
+          th:href="@{/photos/{name}(name=${prev.metadata.name})}"
+          th:text="|上一张：${prev.spec.displayName ?: prev.metadata.name}|"
+          >上一张</a
+        >
+        <a
+          class="hardy-post-neighbors__link"
+          th:if="${next != null}"
+          th:href="@{/photos/{name}(name=${next.metadata.name})}"
+          th:text="|下一张：${next.spec.displayName ?: next.metadata.name}|"
+          >下一张</a
+        >
+      </nav>
+    </article>
+    <section class="hardy-comments" th:if="${haloCommentEnabled and photo?.metadata?.name != null}">
+      <halo:comment group="core.halo.run" kind="Photo" th:attr="name=${photo.metadata.name}" />
+    </section>
+  </th:block>
+</include>

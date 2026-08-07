@@ -1,0 +1,40 @@
+<div class="hardy-post-meta">
+  <time
+    class="hardy-post-meta__item"
+    th:if="${post.spec.publishTime}"
+    th:datetime="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+    th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+  >
+    2026-01-01
+  </time>
+  <a
+    class="hardy-post-meta__item hardy-post-meta__link"
+    th:each="cat : ${post.categories}"
+    th:if="${not #lists.isEmpty(post.categories)}"
+    th:href="@{${cat.status.permalink}}"
+    th:text="${cat.spec.displayName}"
+  >
+    Category
+  </a>
+  <span
+    class="hardy-post-meta__item"
+    th:if="${post.stats?.visit != null}"
+    th:text="|${post.stats.visit} 次浏览|"
+  >
+    0 次浏览
+  </span>
+  <span
+    class="hardy-post-meta__item"
+    th:if="${post.stats?.comment != null}"
+    th:text="|${post.stats.comment} 条评论|"
+  >
+    0 条评论
+  </span>
+  <span
+    class="hardy-post-meta__item"
+    th:if="${post.stats?.upvote != null}"
+    th:text="|${post.stats.upvote} 次点赞|"
+  >
+    0 次点赞
+  </span>
+</div>

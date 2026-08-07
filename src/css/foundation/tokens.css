@@ -1,0 +1,72 @@
+:root {
+  color-scheme: light;
+  --hardy-color-bg: #ffffff;
+  --hardy-color-surface: #ffffff;
+  --hardy-color-text: #273343;
+  --hardy-color-muted: #8390a0;
+  --hardy-color-subtle: #a0a9b5;
+  --hardy-color-border: #edf0f3;
+  --hardy-color-accent: #52657b;
+  --hardy-color-accent-contrast: #ffffff;
+  --hardy-color-focus: #0f766e;
+  --hardy-color-overlay: rgb(15 23 42 / 0.36);
+  --hardy-font-sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --hardy-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --hardy-space-1: 4px;
+  --hardy-space-2: 8px;
+  --hardy-space-3: 12px;
+  --hardy-space-4: 16px;
+  --hardy-space-5: 20px;
+  --hardy-space-6: 24px;
+  --hardy-space-8: 32px;
+  --hardy-space-10: 40px;
+  --hardy-space-12: 48px;
+  --hardy-radius-sm: 4px;
+  --hardy-radius-md: 8px;
+  --hardy-radius-round: 999px;
+  --hardy-shadow-drawer: 0 20px 60px rgb(15 23 42 / 0.18);
+  --hardy-duration-fast: 160ms;
+  --hardy-duration-base: 220ms;
+  --hardy-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --hardy-shell-max: 1400px;
+  --hardy-shell-breakpoint: 1024px;
+  --hardy-list-breakpoint: 768px;
+  --hardy-sidebar-width: 25%;
+  --hardy-content-width: 75%;
+  --hardy-content-measure: 900px;
+  --hardy-mobile-header-height: 68px;
+  --hardy-mobile-drawer-width: min(320px, 86vw);
+}
+
+html[data-color-scheme="dark"] {
+  color-scheme: dark;
+  --hardy-color-bg: #111418;
+  --hardy-color-surface: #191d23;
+  --hardy-color-text: #eef2f7;
+  --hardy-color-muted: #aab2bf;
+  --hardy-color-subtle: #87909e;
+  --hardy-color-border: #303641;
+  --hardy-color-accent: #7aa2ff;
+  --hardy-color-accent-contrast: #101317;
+  --hardy-color-focus: #5eead4;
+  --hardy-color-overlay: rgb(0 0 0 / 0.48);
+  --hardy-shadow-drawer: 0 20px 60px rgb(0 0 0 / 0.42);
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-color-scheme="auto"] {
+    color-scheme: dark;
+    --hardy-color-bg: #111418;
+    --hardy-color-surface: #191d23;
+    --hardy-color-text: #eef2f7;
+    --hardy-color-muted: #aab2bf;
+    --hardy-color-subtle: #87909e;
+    --hardy-color-border: #303641;
+    --hardy-color-accent: #7aa2ff;
+    --hardy-color-accent-contrast: #101317;
+    --hardy-color-focus: #5eead4;
+    --hardy-color-overlay: rgb(0 0 0 / 0.48);
+    --hardy-shadow-drawer: 0 20px 60px rgb(0 0 0 / 0.42);
+  }
+}

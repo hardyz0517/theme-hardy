@@ -1,0 +1,13 @@
+<header class="hardy-page-heading">
+  <p class="hardy-page-heading__eyebrow" th:if="${hardyPageEyebrow}" th:text="${hardyPageEyebrow}">
+    Page
+  </p>
+  <h1 class="hardy-page-heading__title" th:text="${hardyPageTitle}">Page title</h1>
+  <p
+    class="hardy-page-heading__description"
+    th:if="${hardyPageDescription}"
+    th:text="${hardyPageDescription}"
+  >
+    Page description
+  </p>
+</header>

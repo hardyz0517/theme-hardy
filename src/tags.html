@@ -1,18 +1,29 @@
 <include src="layout.html">
   <template name="head">
-    <title th:text="|Tags - ${site.title}|">Tags</title>
+    <title th:text="|标签 - ${site.title}|">标签</title>
   </template>
 
-  <h1>Tags</h1>
-  <ul class="tag-list">
-    <li th:each="tag : ${tags.items}">
-      <a th:href="@{${tag.status.permalink}}" th:text="${tag.spec.displayName}" class="tag"></a>
-    </li>
-  </ul>
+  <section class="hardy-list-page">
+    <div th:with="hardyPageTitle='标签'">
+      <include src="components/page-heading.html"></include>
+    </div>
 
-  <nav class="pagination" th:if="${tags.hasPrevious() || tags.hasNext()}">
-    <a th:if="${tags.hasPrevious()}" th:href="@{${tags.prevUrl}}">Previous</a>
-    <span th:text="|${tags.page} / ${tags.totalPages}|"></span>
-    <a th:if="${tags.hasNext()}" th:href="@{${tags.nextUrl}}">Next</a>
-  </nav>
+    <div
+      th:if="${#lists.isEmpty(tags)}"
+      th:with="hardyEmptyTitle='暂无标签',hardyEmptyDescription='整理文章后，标签会显示在这里。'"
+    >
+      <include src="components/empty-state.html"></include>
+    </div>
+
+    <ul class="hardy-taxonomy-list" th:unless="${#lists.isEmpty(tags)}">
+      <li class="hardy-taxonomy-list__item" th:each="tag : ${tags}">
+        <a class="hardy-taxonomy-list__link" th:href="@{${tag.status.permalink}}">
+          <span class="hardy-taxonomy-list__name" th:text="${tag.spec.displayName}">Tag</span>
+          <span class="hardy-taxonomy-list__count" th:text="|${tag.postCount} 篇文章|">
+            0 篇文章
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
 </include>

@@ -1,13 +1,39 @@
 apiVersion: v1alpha1
 kind: Setting
 metadata:
-  name: theme-vite-starter-setting
+  name: theme-hardy-setting
 spec:
   forms:
-    - group: styles
-      label: 样式
+    - group: basic
+      label: 基础设置
       formSchema:
-        - $formkit: color
-          name: background_color
-          label: 背景颜色
-          value: "#f2f2f2"
+        - $formkit: text
+          name: custom_footer
+          label: 自定义页脚文本
+          value: ""
+        - $formkit: url
+          name: social_github
+          label: GitHub 链接
+          value: ""
+        - $formkit: email
+          name: social_email
+          label: 邮箱地址
+          value: ""
+        - $formkit: url
+          name: social_website
+          label: 个人网站链接
+          value: ""
+    - group: appearance
+      label: 外观
+      formSchema:
+        - $formkit: radio
+          name: color_scheme
+          label: 默认颜色模式
+          value: auto
+          options:
+            - label: 跟随系统
+              value: auto
+            - label: 浅色
+              value: light
+            - label: 深色
+              value: dark

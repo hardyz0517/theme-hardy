@@ -1,0 +1,17 @@
+.hardy-empty-state {
+  padding: var(--hardy-space-12) 0;
+  color: var(--hardy-color-muted);
+  border-block: 1px solid var(--hardy-color-border);
+}
+
+.hardy-empty-state__title {
+  margin: 0;
+  color: var(--hardy-color-text);
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.hardy-empty-state__description {
+  margin: var(--hardy-space-2) 0 0;
+  font-size: 15px;
+}

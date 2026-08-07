@@ -1,12 +1,26 @@
 <include src="layout.html">
   <template name="head">
     <title th:text="${site.title}">Home</title>
-    <script type="module" src="./js/index.ts"></script>
   </template>
 
-  <ul class="post-list">
-    <include src="post-card.html"></include>
-  </ul>
+  <section class="hardy-list-page">
+    <div th:with="hardyPageTitle='最新文章'">
+      <include src="components/page-heading.html"></include>
+    </div>
 
-  <include src="pagination.html"></include>
+    <div
+      th:if="${#lists.isEmpty(posts.items)}"
+      th:with="hardyEmptyTitle='暂无文章',hardyEmptyDescription='新的文章会显示在这里。'"
+    >
+      <include src="components/empty-state.html"></include>
+    </div>
+
+    <ul class="hardy-post-list" th:unless="${#lists.isEmpty(posts.items)}">
+      <include src="components/post-card.html"></include>
+    </ul>
+
+    <div th:with="hardyPagination=${posts}">
+      <include src="components/pagination.html"></include>
+    </div>
+  </section>
 </include>

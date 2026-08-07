@@ -3,11 +3,24 @@
     <title th:text="|${tag.spec.displayName} - ${site.title}|">Tag Archive</title>
   </template>
 
-  <h1 th:text="|Tag: ${tag.spec.displayName}|"></h1>
+  <section class="hardy-list-page">
+    <div th:with="hardyPageEyebrow='标签',hardyPageTitle=${tag.spec.displayName}">
+      <include src="components/page-heading.html"></include>
+    </div>
 
-  <ul class="post-list">
-    <include src="post-card.html"></include>
-  </ul>
+    <div
+      th:if="${#lists.isEmpty(posts.items)}"
+      th:with="hardyEmptyTitle='该标签暂无文章',hardyEmptyDescription='使用此标签的文章会显示在这里。'"
+    >
+      <include src="components/empty-state.html"></include>
+    </div>
 
-  <include src="pagination.html"></include>
+    <ul class="hardy-post-list" th:unless="${#lists.isEmpty(posts.items)}">
+      <include src="components/post-card.html"></include>
+    </ul>
+
+    <div th:with="hardyPagination=${posts}">
+      <include src="components/pagination.html"></include>
+    </div>
+  </section>
 </include>
