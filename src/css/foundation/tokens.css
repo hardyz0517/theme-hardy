@@ -34,7 +34,7 @@
   --hardy-duration-base: 220ms;
   --hardy-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --hardy-shell-max: 1400px;
-  --hardy-shell-breakpoint: 1024px;
+  --hardy-shell-breakpoint: 900px;
   --hardy-list-breakpoint: 768px;
   --hardy-sidebar-width: 25%;
   --hardy-content-width: 1fr;

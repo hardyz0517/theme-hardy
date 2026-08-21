@@ -3,7 +3,8 @@
   lang="zh-CN"
   data-color-scheme="auto"
   xmlns:th="http://www.thymeleaf.org"
-  th:attr="data-color-scheme=${theme.config.appearance?.color_scheme ?: 'auto'},data-hardy-configured-color-scheme=${theme.config.appearance?.color_scheme ?: 'auto'}"
+  th:with="hardyMenu=${menuFinder.getPrimary()},hardyBasic=${theme.config['basic']},hardyProfile=${theme.config['profile']},hardySocial=${theme.config['social']},hardyAppearance=${theme.config['appearance']},hardySearchAvailable=${pluginFinder.available('PluginSearchWidget')}"
+  th:attr="data-color-scheme=${hardyAppearance?.color_scheme ?: 'auto'},data-hardy-configured-color-scheme=${hardyAppearance?.color_scheme ?: 'auto'}"
 >
   <head>
     <meta charset="UTF-8" />
@@ -14,7 +15,7 @@
     <script th:inline="javascript">
       (() => {
         const validModes = ["auto", "light", "dark"];
-        const configuredMode = /*[[${theme.config.appearance?.color_scheme ?: 'auto'}]]*/ "auto";
+        const configuredMode = /*[[${hardyAppearance?.color_scheme ?: 'auto'}]]*/ "auto";
         let storedMode = null;
         try {
           storedMode = window.localStorage.getItem("hardy:color-scheme");

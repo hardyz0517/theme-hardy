@@ -1,8 +1,4 @@
-<aside
-  class="hardy-sidebar"
-  aria-label="站点侧栏"
-  th:with="menu = ${menuFinder.getPrimary()}, profile = ${theme.config['profile']}"
->
+<aside class="hardy-sidebar" aria-label="站点侧栏">
   <div class="hardy-sidebar__tools" aria-label="站点工具">
     <button
       class="hardy-sidebar__icon-button"
@@ -47,7 +43,7 @@
       data-hardy-search-trigger
       aria-label="搜索"
       title="搜索"
-      th:if="${pluginFinder.available('PluginSearchWidget')}"
+      th:if="${hardySearchAvailable}"
     >
       <svg class="hardy-sidebar__icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="11" cy="11" r="7" />
@@ -62,16 +58,16 @@
       <a class="hardy-brand__avatar-link" th:href="@{/}" aria-label="返回首页">
         <span class="hardy-brand__avatar" aria-hidden="true">
           <img
-            th:if="${!#strings.isEmpty(profile?.avatar)}"
-            th:src="${profile.avatar}"
-            th:alt="${profile?.display_name ?: site.title}"
+            th:if="${!#strings.isEmpty(hardyProfile?.avatar)}"
+            th:src="${hardyProfile.avatar}"
+            th:alt="${hardyProfile?.display_name ?: site.title}"
           />
           <img
-            th:if="${#strings.isEmpty(profile?.avatar) and site.logo}"
+            th:if="${#strings.isEmpty(hardyProfile?.avatar) and site.logo}"
             th:src="${site.logo}"
-            th:alt="${profile?.display_name ?: site.title}"
+            th:alt="${hardyProfile?.display_name ?: site.title}"
           />
-          <span th:if="${#strings.isEmpty(profile?.avatar) and !site.logo}">H</span>
+          <span th:if="${#strings.isEmpty(hardyProfile?.avatar) and !site.logo}">H</span>
         </span>
       </a>
       <a class="hardy-brand__login" th:href="@{/console}" aria-label="登录后台" title="登录后台">
@@ -82,27 +78,31 @@
       </a>
     </span>
     <a class="hardy-brand__identity" th:href="@{/}">
-      <span class="hardy-brand__title" th:text="${profile?.display_name ?: site.title}"
+      <span class="hardy-brand__title" th:text="${hardyProfile?.display_name ?: site.title}"
         >Site Title</span
       >
       <span
         class="hardy-brand__subtitle"
-        th:if="${!#strings.isEmpty(profile?.tagline ?: site.subtitle)}"
-        th:text="${profile?.tagline ?: site.subtitle}"
+        th:if="${!#strings.isEmpty(hardyProfile?.tagline ?: site.subtitle)}"
+        th:text="${hardyProfile?.tagline ?: site.subtitle}"
         >Site subtitle</span
       >
     </a>
   </div>
+
+  <aside class="hardy-toc hardy-sidebar__toc" data-hardy-toc aria-label="文章目录" hidden>
+    <p class="hardy-toc__title">文章目录</p>
+  </aside>
 
   <include src="shell/social-links.html"></include>
 
   <nav
     class="hardy-nav"
     aria-label="主导航"
-    th:if="${menu?.menuItems != null and !#lists.isEmpty(menu.menuItems)}"
+    th:if="${hardyMenu?.menuItems != null and !#lists.isEmpty(hardyMenu.menuItems)}"
   >
     <ul class="hardy-nav__list">
-      <li th:each="item : ${menu.menuItems}">
+      <li th:each="item : ${hardyMenu.menuItems}">
         <a
           class="hardy-nav__link"
           th:href="@{${item.status.href}}"

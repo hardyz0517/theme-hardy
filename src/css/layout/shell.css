@@ -19,11 +19,6 @@
   transition: transform var(--hardy-duration-base) var(--hardy-ease-standard);
 }
 
-html.is-page-leaving body {
-  animation: hardy-page-leave 220ms var(--hardy-ease-standard) both;
-  pointer-events: none;
-}
-
 @keyframes hardy-fade-in {
   from {
     opacity: 0;
@@ -46,17 +41,6 @@ html.is-page-leaving body {
   }
 }
 
-@keyframes hardy-page-leave {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-}
-
 .hardy-sidebar__tools,
 .hardy-brand__avatar,
 .hardy-brand__title,
@@ -74,6 +58,7 @@ html.is-page-leaving body {
 .hardy-taxonomy-list__item,
 .hardy-archive-year__title,
 .hardy-archive-post__link,
+.hardy-archive-post__edit,
 .hardy-archive-post__date {
   animation: hardy-fade-in 1s both;
 }
@@ -89,7 +74,8 @@ html.is-page-leaving body {
 }
 
 .hardy-socials,
-.hardy-archive-post__link {
+.hardy-archive-post__link,
+.hardy-archive-post__edit {
   animation-delay: 300ms;
 }
 
@@ -180,7 +166,7 @@ html.is-page-leaving body {
   transform: translateY(0);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   .hardy-page {
     transform: none !important;
   }

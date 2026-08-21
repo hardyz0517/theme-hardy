@@ -1,5 +1,36 @@
 html {
+  overflow-x: hidden;
+  overflow-x: clip;
+  scrollbar-color: transparent transparent;
+  scrollbar-width: thin;
   background: var(--hardy-color-bg);
+}
+
+html[data-hardy-scrollbar="scrolling"] {
+  scrollbar-color: color-mix(in srgb, var(--hardy-color-muted) 68%, transparent) transparent;
+}
+
+html::-webkit-scrollbar {
+  width: 8px;
+  height: 0;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: var(--hardy-radius-round);
+}
+
+html[data-hardy-scrollbar="scrolling"]::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--hardy-color-muted) 68%, transparent);
+}
+
+body {
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .hardy-visually-hidden {

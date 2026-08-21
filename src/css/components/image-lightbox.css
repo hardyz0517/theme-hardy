@@ -1,0 +1,40 @@
+.hardy-image-lightbox {
+  display: none;
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
+  place-items: center;
+  padding: 24px;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+}
+
+.hardy-image-lightbox[open] {
+  display: grid;
+}
+
+.hardy-image-lightbox::backdrop {
+  background: rgb(15 23 42 / 78%);
+}
+
+.hardy-image-lightbox__image {
+  display: block;
+  max-width: min(92vw, 1200px);
+  max-height: 92vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--hardy-radius-md);
+  box-shadow: 0 24px 80px rgb(0 0 0 / 40%);
+}
+
+.hardy-image-lightbox__trigger {
+  cursor: zoom-in;
+}
+
+.hardy-image-lightbox__trigger:focus-visible {
+  outline: 3px solid var(--hardy-color-focus);
+  outline-offset: 4px;
+}

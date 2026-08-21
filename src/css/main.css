@@ -10,6 +10,7 @@
 @import "./components/post-card.css";
 @import "./components/post-meta.css";
 @import "./components/pagination.css";
+@import "./components/image-lightbox.css";
 @import "./content/taxonomy.css";
 @import "./content/archive-list.css";
 @import "./content/detail.css";
@@ -18,4 +19,5 @@
 @import "./content/links.css";
 @import "./content/moments.css";
 @import "./content/photos.css";
+@import "./content/resources.css";
 @import "./integrations/search.css";

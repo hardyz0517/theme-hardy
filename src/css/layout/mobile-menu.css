@@ -113,7 +113,7 @@
   margin-block-end: var(--hardy-space-6);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   .hardy-mobile-header,
   .hardy-mobile-menu,
   .hardy-menu-mask,

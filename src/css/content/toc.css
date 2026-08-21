@@ -2,15 +2,12 @@
   display: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   .hardy-toc {
-    position: sticky;
-    top: var(--hardy-space-10);
     display: block;
-    max-height: calc(100vh - var(--hardy-space-10) * 2);
-    overflow-y: auto;
-    color: var(--hardy-color-muted);
-    font-size: 13px;
+    color: var(--hardy-color-text);
+    font-size: 14px;
+    animation: hardy-fade-in 1s 400ms both;
   }
 
   .hardy-toc[hidden] {
@@ -18,31 +15,56 @@
   }
 
   .hardy-toc__title {
-    margin: 0 0 var(--hardy-space-3);
+    margin: 0 0 var(--hardy-space-4);
     color: var(--hardy-color-text);
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.5;
+    opacity: 0.8;
   }
 
   .hardy-toc__list {
-    display: grid;
-    gap: var(--hardy-space-2);
     padding: 0;
     margin: 0;
     list-style: none;
   }
 
+  .hardy-toc__item + .hardy-toc__item {
+    margin-block-start: var(--hardy-space-1);
+  }
+
+  .hardy-toc__list--nested {
+    margin: var(--hardy-space-3) 0 var(--hardy-space-3) var(--hardy-space-3);
+    padding-inline-start: var(--hardy-space-2);
+    border-inline-start: 1px solid color-mix(in srgb, var(--hardy-color-text) 12%, transparent);
+  }
+
   .hardy-toc__link {
     display: block;
-    color: var(--hardy-color-muted);
+    padding: var(--hardy-space-1) 6px;
+    color: var(--hardy-color-text);
     line-height: 1.5;
+    border-radius: var(--hardy-radius-sm);
+    opacity: 0.8;
+    transition:
+      color 150ms var(--hardy-ease-standard),
+      background-color 150ms var(--hardy-ease-standard),
+      opacity 150ms var(--hardy-ease-standard);
   }
 
+  .hardy-toc__link:hover,
+  .hardy-toc__link:focus-visible,
   .hardy-toc__link.is-active {
-    color: var(--hardy-color-accent);
+    color: var(--hardy-color-text);
+    background: color-mix(in srgb, var(--hardy-color-text) 6%, transparent);
   }
 
-  .hardy-toc__item--h3 {
-    padding-inline-start: var(--hardy-space-3);
+  .hardy-toc__link:hover,
+  .hardy-toc__link:focus-visible {
+    opacity: 1;
+  }
+
+  .hardy-sidebar__toc {
+    padding-inline-end: var(--hardy-space-2);
   }
 }

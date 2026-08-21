@@ -1,6 +1,6 @@
 <div
   class="hardy-moment-row"
-  th:with="profile = ${theme.config['profile']},momentAvatar=${moment.owner?.avatar ?: profile?.avatar ?: site.logo},momentCommentCount=${moment.stats?.approvedComment ?: moment.stats?.totalComment ?: 0}"
+  th:with="momentAvatar=${moment.owner?.avatar ?: hardyProfile?.avatar ?: site.logo},momentCommentCount=${moment.stats?.approvedComment ?: moment.stats?.totalComment ?: 0}"
 >
   <span class="hardy-moment-row__avatar" aria-hidden="true">
     <img
@@ -8,8 +8,8 @@
       th:if="${momentAvatar}"
       th:src="${momentAvatar}"
       th:alt="${moment.owner?.displayName ?: site.title}"
-      width="48"
-      height="48"
+      width="40"
+      height="40"
       loading="lazy"
       decoding="async"
     />
@@ -18,11 +18,40 @@
   </span>
 
   <div class="hardy-moment-row__body">
+    <header class="hardy-moment-header">
+      <span
+        class="hardy-moment-author"
+        th:text="${moment.owner?.displayName ?: hardyProfile?.display_name ?: site.title}"
+        >Site Title</span
+      >
+      <time
+        class="hardy-moment-time"
+        th:if="${moment.spec?.releaseTime}"
+        th:datetime="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd')}"
+        th:text="${#temporals.format(moment.spec.releaseTime, 'MM-dd HH:mm')}"
+        >01-01 12:00</time
+      >
+    </header>
+
     <div
       class="hardy-moment-content hardy-prose"
       th:utext="${moment.spec?.content?.html ?: moment.spec?.content?.raw}"
     >
       Moment content
+    </div>
+
+    <div
+      class="hardy-moment-tags"
+      th:if="${moment.spec?.tags != null and !#lists.isEmpty(moment.spec.tags)}"
+    >
+      <a
+        class="hardy-moment-tags__link"
+        th:each="tag : ${moment.spec.tags}"
+        th:href="@{/moments(tag=${tag})}"
+      >
+        <span class="hardy-moment-tags__prefix" aria-hidden="true">#</span>
+        <span th:text="${tag}">Tag</span>
+      </a>
     </div>
 
     <div
@@ -85,12 +114,11 @@
         <span th:text="${moment.stats.upvote}">0</span>
       </span>
 
-      <button
+      <a
         class="hardy-moment-action hardy-moment-action--button"
-        type="button"
-        data-hardy-moment-comment-toggle
-        aria-expanded="false"
-        th:if="${haloCommentEnabled and moment?.metadata?.name != null}"
+        th:if="${haloCommentEnabled and !hardyMomentDetail and moment?.metadata?.name != null}"
+        th:href="@{/moments/{name}#hardy-moment-comments(name=${moment.metadata.name})}"
+        aria-label="查看瞬间评论"
       >
         <span class="hardy-moment-action__icon" aria-hidden="true">
           <svg class="hardy-icon" viewBox="0 0 24 24">
@@ -100,7 +128,23 @@
           </svg>
         </span>
         <span th:text="${momentCommentCount}">0</span>
-      </button>
+      </a>
+
+      <a
+        class="hardy-moment-action hardy-moment-action--button"
+        href="#hardy-moment-comments"
+        th:if="${haloCommentEnabled and hardyMomentDetail and moment?.metadata?.name != null}"
+        aria-label="查看瞬间评论"
+      >
+        <span class="hardy-moment-action__icon" aria-hidden="true">
+          <svg class="hardy-icon" viewBox="0 0 24 24">
+            <path
+              d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.6 8.6 0 0 1-3.7-.8L4 20l1.1-3.8A7.4 7.4 0 0 1 4.5 12 7.5 7.5 0 0 1 12 4.5a7.5 7.5 0 0 1 8 7Z"
+            />
+          </svg>
+        </span>
+        <span th:text="${momentCommentCount}">0</span>
+      </a>
 
       <button
         class="hardy-moment-action hardy-moment-action--button"
@@ -116,27 +160,26 @@
         </span>
         <span class="hardy-visually-hidden">分享</span>
       </button>
+      <button
+        class="hardy-moment-action hardy-moment-action--button hardy-moment-action--delete"
+        type="button"
+        data-hardy-moment-delete
+        th:attr="data-hardy-moment-name=${moment.metadata.name}"
+        sec:authorize="isAuthenticated()"
+        aria-label="删除瞬间"
+      >
+        <span class="hardy-moment-action__icon" aria-hidden="true">
+          <svg class="hardy-icon" viewBox="0 0 24 24">
+            <path d="M5 7h14M10 11v6M14 11v6M9 7V4h6v3m-9 0 1 13h10l1-13" />
+          </svg>
+        </span>
+        <span class="hardy-visually-hidden">删除</span>
+      </button>
       <span
         class="hardy-visually-hidden"
         th:id="|hardy-moment-share-status-${moment.metadata.name}|"
         aria-live="polite"
       ></span>
-
-      <time
-        class="hardy-moment-action hardy-moment-action--date"
-        th:if="${moment.spec?.releaseTime}"
-        th:datetime="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd')}"
-        th:text="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd')}"
-        >2026-01-01</time
-      >
-    </div>
-
-    <div
-      class="hardy-moment-comments"
-      th:if="${haloCommentEnabled and moment?.metadata?.name != null}"
-      hidden
-    >
-      <halo:comment group="moment.halo.run" kind="Moment" th:attr="name=${moment.metadata.name}" />
     </div>
   </div>
 </div>

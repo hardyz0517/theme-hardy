@@ -4,9 +4,35 @@
   </template>
 
   <th:block th:if="${pluginFinder.available('PluginMoments')}">
-    <section class="hardy-list-page hardy-moments-page">
+    <section
+      class="hardy-list-page hardy-moments-page"
+      th:with="momentsSettings = ${theme.config['moments']}"
+    >
+      <figure
+        class="hardy-moments-cover"
+        th:if="${!#strings.isEmpty(momentsSettings?.cover_image)}"
+      >
+        <img th:src="${momentsSettings.cover_image}" alt="" decoding="async" fetchpriority="high" />
+        <div class="hardy-moments-cover__title">
+          <svg
+            class="hardy-moments-heading__icon hardy-icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M4 7.5A2.5 2.5 0 0 1 6.5 5h2l1.2-2h4.6l1.2 2h2A2.5 2.5 0 0 1 20 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5v-9Z"
+            />
+            <circle cx="12" cy="12" r="3.25" />
+          </svg>
+          <span>瞬间</span>
+        </div>
+      </figure>
+
       <header class="hardy-moments-heading">
-        <h1 class="hardy-moments-heading__title">
+        <h1
+          class="hardy-moments-heading__title"
+          th:if="${#strings.isEmpty(momentsSettings?.cover_image)}"
+        >
           <svg
             class="hardy-moments-heading__icon hardy-icon"
             viewBox="0 0 24 24"
@@ -30,6 +56,18 @@
           </svg>
           <span>RSS 订阅</span>
         </a>
+        <button
+          class="hardy-moments-publish"
+          type="button"
+          data-hardy-moment-open
+          aria-haspopup="dialog"
+          sec:authorize="isAuthenticated()"
+        >
+          <svg class="hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span>发表</span>
+        </button>
       </header>
 
       <nav
@@ -62,7 +100,11 @@
         role="list"
         th:if="${moments != null and !#lists.isEmpty(moments.items)}"
       >
-        <li class="hardy-moment-card" th:each="moment : ${moments.items}">
+        <li
+          class="hardy-moment-card"
+          th:each="moment : ${moments.items}"
+          th:with="hardyMomentDetail=false"
+        >
           <include src="components/moment-item.html"></include>
         </li>
       </ul>
@@ -70,6 +112,85 @@
       <div th:with="hardyPagination=${moments}">
         <include src="components/pagination.html"></include>
       </div>
+
+      <dialog
+        class="hardy-moment-composer"
+        data-hardy-moment-composer
+        aria-label="发表瞬间"
+        sec:authorize="isAuthenticated()"
+      >
+        <form class="hardy-moment-composer__surface" data-hardy-moment-form method="dialog">
+          <label class="hardy-moment-composer__field">
+            <span class="hardy-visually-hidden">这一刻的想法</span>
+            <textarea
+              data-hardy-moment-content
+              rows="5"
+              maxlength="2000"
+              placeholder="这一刻的想法..."
+            ></textarea>
+          </label>
+          <div class="hardy-moment-composer__media">
+            <div
+              class="hardy-moment-composer__media-grid"
+              data-hardy-moment-media-list
+              role="list"
+              aria-label="已添加图片"
+            >
+              <label class="hardy-moment-composer__media-add" title="添加图片">
+                <svg class="hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                <span>添加图片</span>
+                <input data-hardy-moment-file type="file" accept="image/*" multiple />
+              </label>
+            </div>
+            <label class="hardy-moment-composer__media-input">
+              <span>图片链接</span>
+              <input
+                data-hardy-moment-media
+                type="text"
+                inputmode="url"
+                placeholder="粘贴图片 URL 后按回车添加"
+              />
+            </label>
+          </div>
+          <div class="hardy-moment-composer__row">
+            <div class="hardy-moment-composer__tag-field">
+              <label for="hardy-moment-tags-input">标签</label>
+              <span class="hardy-moment-composer__tags" data-hardy-moment-tags-editor>
+                <span
+                  class="hardy-moment-composer__tags-list"
+                  data-hardy-moment-tags-list
+                  role="list"
+                  aria-label="已添加标签"
+                ></span>
+                <input
+                  id="hardy-moment-tags-input"
+                  data-hardy-moment-tags
+                  type="text"
+                  autocomplete="off"
+                  enterkeyhint="done"
+                  placeholder="输入标签后回车"
+                />
+              </span>
+            </div>
+          </div>
+          <p
+            class="hardy-moment-composer__status"
+            data-hardy-moment-status
+            role="status"
+            aria-live="polite"
+          ></p>
+          <footer class="hardy-moment-composer__actions">
+            <button class="hardy-moment-composer__cancel" type="button" data-hardy-moment-close>
+              取消
+            </button>
+            <button class="hardy-moment-composer__submit" type="submit" data-hardy-moment-submit>
+              发表
+            </button>
+          </footer>
+        </form>
+      </dialog>
     </section>
   </th:block>
 </include>

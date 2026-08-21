@@ -1,11 +1,30 @@
 <header class="hardy-page-heading">
-  <h1 class="hardy-page-heading__title">
-    <svg class="hardy-page-heading__icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <path d="M14 2v6h6M8 13h8M8 17h6" />
-    </svg>
-    <span th:text="${hardyPageTitle}">Page title</span>
-  </h1>
+  <div class="hardy-page-heading__row">
+    <h1 class="hardy-page-heading__title">
+      <svg class="hardy-page-heading__icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <path d="M14 2v6h6M8 13h8M8 17h6" />
+      </svg>
+      <span th:text="${hardyPageTitle}">Page title</span>
+    </h1>
+    <a
+      class="hardy-page-heading__action"
+      th:if="${hardyShowNewPostAction}"
+      sec:authorize="hasRole('super-role')"
+      th:href="@{${hardyNewPostHref ?: '/console/posts/editor'}}"
+      aria-label="新建文章"
+      title="新建文章"
+    >
+      <svg
+        class="hardy-page-heading__action-icon hardy-icon"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path d="M12 5v14M5 12h14" />
+      </svg>
+      <span>新建文章</span>
+    </a>
+  </div>
   <p
     class="hardy-page-heading__description"
     th:if="${hardyPageDescription}"

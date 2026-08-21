@@ -1,6 +1,37 @@
-<footer class="hardy-footer">
+<footer class="hardy-footer" th:with="hardySiteStats=${siteStatsFinder.getStats()}">
   <div class="hardy-footer__inner">
-    <p th:text="${theme.config.basic?.custom_footer ?: site.title}">Site Title</p>
+    <div class="hardy-footer__stats" aria-label="站点统计">
+      <span
+        class="hardy-footer__stat"
+        data-hardy-site-runtime-item
+        hidden
+        th:if="${!#strings.isEmpty(hardyBasic?.site_start_time)}"
+      >
+        <svg class="hardy-footer__icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="M12 7v5l3 2"></path>
+        </svg>
+        <span>本站已运行</span>
+        <strong
+          class="hardy-footer__value"
+          data-hardy-site-runtime
+          th:attr="data-hardy-site-start=${hardyBasic.site_start_time}"
+          >0 天 00:00:00</strong
+        >
+        <span class="hardy-footer__separator" aria-hidden="true">·</span>
+      </span>
+      <span class="hardy-footer__stat">
+        <svg class="hardy-footer__icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+          <circle cx="12" cy="12" r="2.5"></circle>
+        </svg>
+        <span>访问量</span>
+        <strong class="hardy-footer__value" th:text="${hardySiteStats.visit}">0</strong>
+      </span>
+    </div>
+    <p class="hardy-footer__text" th:text="${hardyBasic?.custom_footer ?: site.title}">
+      Site Title
+    </p>
     <halo:footer />
   </div>
 </footer>

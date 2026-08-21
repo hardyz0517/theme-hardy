@@ -12,6 +12,17 @@ spec:
           label: 自定义页脚文本
           value: ""
           help: 留空时显示站点标题。
+        - $formkit: datetime-local
+          name: site_start_time
+          label: 建站时间
+          value: ""
+          help: 用于计算页脚中的网站运营时长；留空时不显示运营时间。
+        - $formkit: text
+          name: new_post_url
+          label: 新建文章链接
+          value: ""
+          placeholder: /console/posts/editor
+          help: 支持站内路径或完整 URL；归档编辑入口会自动追加 name 参数；留空时使用 Halo Console 的默认编辑器。
         - $formkit: switch
           name: show_socials
           label: 显示社交链接区域
@@ -35,6 +46,16 @@ spec:
           name: tagline
           label: 一句话简介
           help: 留空时显示站点副标题。
+          value: ""
+    - group: moments
+      label: 瞬间
+      formSchema:
+        - $formkit: attachment
+          name: cover_image
+          label: 瞬间页封面
+          help: 显示在瞬间信息流顶部；留空时不显示封面。
+          accepts:
+            - image/*
           value: ""
     - group: social
       label: 社交链接

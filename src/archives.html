@@ -4,7 +4,9 @@
   </template>
 
   <section class="hardy-list-page">
-    <div th:with="hardyPageTitle='文章归档'">
+    <div
+      th:with="hardyPageTitle='文章归档',hardyShowNewPostAction=true,hardyNewPostHref=${hardyBasic?.new_post_url}"
+    >
       <include src="components/page-heading.html"></include>
     </div>
 
@@ -15,19 +17,43 @@
       <include src="components/empty-state.html"></include>
     </div>
 
-    <div class="hardy-archive-list" th:unless="${#lists.isEmpty(archives.items)}">
+    <div
+      class="hardy-archive-list"
+      th:unless="${#lists.isEmpty(archives.items)}"
+      th:with="hardyPostEditorHref=${hardyBasic?.new_post_url ?: '/console/posts/editor'}"
+    >
       <section class="hardy-archive-year" th:each="archive : ${archives.items}">
         <h2 class="hardy-archive-year__title" th:text="${archive.year}">2026</h2>
         <ul class="hardy-archive-posts">
           <th:block th:each="month : ${archive.months}">
             <li class="hardy-archive-post" th:each="post : ${month.posts}">
-              <a
-                class="hardy-archive-post__link"
-                th:href="@{${post.status.permalink}}"
-                th:text="${post.spec.title}"
-              >
-                Post title
-              </a>
+              <div class="hardy-archive-post__title-row">
+                <a
+                  class="hardy-archive-post__link"
+                  th:href="@{${post.status.permalink}}"
+                  th:text="${post.spec.title}"
+                >
+                  Post title
+                </a>
+                <a
+                  class="hardy-archive-post__edit"
+                  th:if="${post.metadata?.name}"
+                  sec:authorize="hasRole('super-role')"
+                  th:href="@{${hardyPostEditorHref}(name=${post.metadata.name})}"
+                  aria-label="编辑文章"
+                  title="编辑文章"
+                >
+                  <svg
+                    class="hardy-archive-post__edit-icon hardy-icon"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="m16.5 3.5 4 4L10 18l-4 1 1-4z" />
+                    <path d="m15 5 4 4" />
+                  </svg>
+                </a>
+              </div>
               <time
                 class="hardy-archive-post__date"
                 th:if="${post.spec.publishTime}"

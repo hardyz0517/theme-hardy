@@ -23,9 +23,20 @@
           >返回列表</a
         >
       </header>
-      <div class="hardy-moment-card hardy-moment-card--detail">
+      <div class="hardy-moment-card hardy-moment-card--detail" th:with="hardyMomentDetail=true">
         <include src="components/moment-item.html"></include>
       </div>
+      <section
+        id="hardy-moment-comments"
+        class="hardy-moment-comments"
+        th:if="${haloCommentEnabled and moment?.metadata?.name != null}"
+      >
+        <halo:comment
+          group="moment.halo.run"
+          kind="Moment"
+          th:attr="name=${moment.metadata.name}"
+        />
+      </section>
     </article>
   </th:block>
 </include>

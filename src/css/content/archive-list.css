@@ -29,11 +29,46 @@
   gap: 8px;
 }
 
+.hardy-archive-post__title-row {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+  align-items: center;
+}
+
 .hardy-archive-post__link {
+  min-width: 0;
   font-size: 17px;
   font-weight: 800;
   line-height: 1.45;
   overflow-wrap: anywhere;
+}
+
+.hardy-archive-post__edit {
+  display: inline-flex;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  color: color-mix(in srgb, var(--hardy-color-text) 52%, transparent);
+  border-radius: 0;
+  opacity: 0.9;
+  transition:
+    color var(--hardy-duration-fast) var(--hardy-ease-standard),
+    opacity var(--hardy-duration-fast) var(--hardy-ease-standard);
+}
+
+.hardy-archive-post__edit:hover,
+.hardy-archive-post__edit:focus-visible {
+  color: var(--hardy-color-accent);
+  opacity: 1;
+}
+
+.hardy-archive-post__edit-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .hardy-archive-post__date {

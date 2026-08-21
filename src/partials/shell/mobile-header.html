@@ -1,8 +1,4 @@
-<header
-  class="hardy-mobile-header"
-  data-hardy-mobile-header
-  th:with="profile = ${theme.config['profile']}"
->
+<header class="hardy-mobile-header" data-hardy-mobile-header>
   <button
     class="hardy-shell-button"
     type="button"
@@ -18,17 +14,17 @@
   <a class="hardy-mobile-header__brand" th:href="@{/}">
     <img
       class="hardy-mobile-header__avatar"
-      th:if="${!#strings.isEmpty(profile?.avatar)}"
-      th:src="${profile.avatar}"
-      th:alt="${profile?.display_name ?: site.title}"
+      th:if="${!#strings.isEmpty(hardyProfile?.avatar)}"
+      th:src="${hardyProfile.avatar}"
+      th:alt="${hardyProfile?.display_name ?: site.title}"
     />
     <span
       class="hardy-mobile-header__avatar hardy-mobile-header__avatar--placeholder"
-      th:if="${#strings.isEmpty(profile?.avatar) and !site.logo}"
+      th:if="${#strings.isEmpty(hardyProfile?.avatar) and !site.logo}"
       aria-hidden="true"
       >H</span
     >
-    <span class="hardy-mobile-header__title" th:text="${profile?.display_name ?: site.title}"
+    <span class="hardy-mobile-header__title" th:text="${hardyProfile?.display_name ?: site.title}"
       >Site Title</span
     >
   </a>
@@ -38,7 +34,7 @@
       type="button"
       data-hardy-search-trigger
       aria-label="搜索"
-      th:if="${pluginFinder.available('PluginSearchWidget')}"
+      th:if="${hardySearchAvailable}"
     >
       <svg class="hardy-mobile-header__icon hardy-icon" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="11" cy="11" r="7" />

@@ -1,6 +1,6 @@
 import { isHTMLElement, query, queryAll } from "../core/dom";
 
-const desktopQuery = "(min-width: 1024px)";
+const desktopQuery = "(min-width: 900px)";
 const focusableSelector = [
   "a[href]",
   "button:not([disabled])",
