@@ -1,0 +1,132 @@
+<include src="layout.html">
+  <template name="head">
+    <title th:text="|${title ?: '资源中心'} - ${site.title}|">资源中心</title>
+  </template>
+
+  <section
+    class="hardy-list-page hardy-resources-page"
+    data-hardy-resource-list
+    th:with="hardyResourceFolders=${resourcePage.folders},hardyResourceFolderPage=${resourcePage.folders.page},hardyResourcePageSize=${resourcePage.folders.page?.size ?: 20},hardyResourceCategory=${resourcePage.folders.category},hardyResourceCategories=${resourcePage.categories.categories}"
+  >
+    <div th:with="hardyPageTitle=${title ?: '资源中心'}">
+      <include src="components/page-heading.html"></include>
+    </div>
+
+    <div class="hardy-resource-catalog">
+      <section class="hardy-resource-category">
+        <details class="hardy-resource-category__details" open>
+          <summary class="hardy-resource-category__summary">
+            <span class="hardy-resource-category__chevron" aria-hidden="true">
+              <svg class="hardy-icon" viewBox="0 0 24 24">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </span>
+            <span class="hardy-resource-category__heading">
+              <span
+                class="hardy-resource-category__name"
+                th:text="${hardyResourceCategory?.displayName ?: '资源目录'}"
+                >资源目录</span
+              >
+              <span
+                class="hardy-resource-category__description"
+                th:if="${hardyResourceCategory?.description}"
+                th:text="${hardyResourceCategory.description}"
+                >资源文件夹</span
+              >
+            </span>
+            <span
+              class="hardy-resource-category__count"
+              th:if="${hardyResourceFolderPage != null}"
+              th:text="|${hardyResourceFolderPage.total} 个文件夹|"
+              >0 个文件夹</span
+            >
+          </summary>
+
+          <div class="hardy-resource-category__content">
+            <div
+              class="hardy-resource-empty"
+              th:if="${hardyResourceFolders == null or hardyResourceFolders.folders == null or #lists.isEmpty(hardyResourceFolders.folders)}"
+              th:with="hardyEmptyTitle=${hardyResourceCategory == null ? '暂无公开资源' : '当前分类暂无文件夹'},hardyEmptyDescription='公开的资源文件夹会显示在这里。'"
+            >
+              <include src="components/empty-state.html"></include>
+            </div>
+
+            <ul
+              class="hardy-resource-folder-list"
+              th:if="${hardyResourceFolders != null and hardyResourceFolders.folders != null and !#lists.isEmpty(hardyResourceFolders.folders)}"
+            >
+              <li
+                class="hardy-resource-folder-list__item"
+                th:each="folder : ${hardyResourceFolders.folders}"
+              >
+                <a
+                  class="hardy-resource-folder-card"
+                  th:href="@{${resourceUrls.folder(folder.slug, 1, hardyResourcePageSize)}}"
+                  th:attr="data-resource-folder-slug=${folder.slug},aria-label=|打开 ${folder.displayName ?: folder.slug}|"
+                >
+                  <span class="hardy-resource-folder-card__icon" aria-hidden="true">
+                    <svg class="hardy-icon" viewBox="0 0 24 24">
+                      <path
+                        d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2h6.5A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"
+                      />
+                      <path d="M3 9h18" />
+                    </svg>
+                  </span>
+                  <span class="hardy-resource-folder-card__body">
+                    <span class="hardy-resource-folder-card__type">文件夹</span>
+                    <span
+                      class="hardy-resource-folder-card__name"
+                      th:text="${folder.displayName ?: folder.slug}"
+                      >资源文件夹</span
+                    >
+                    <span
+                      class="hardy-resource-folder-card__description"
+                      th:if="${folder.description}"
+                      th:text="${folder.description}"
+                      >文件夹描述</span
+                    >
+                  </span>
+                  <svg
+                    class="hardy-resource-folder-card__arrow hardy-icon"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </a>
+              </li>
+            </ul>
+
+            <div
+              th:if="${hardyResourceFolderPage != null}"
+              th:with="hardyResourcePage=${hardyResourceFolderPage},hardyResourceCategorySlug=${hardyResourceCategory?.slug}"
+            >
+              <div
+                th:with="hardyResourcePreviousHref=${hardyResourcePage.hasPrevious() ? resourceUrls.list(hardyResourceCategorySlug, hardyResourcePage.page - 1, hardyResourcePage.size) : null},hardyResourceNextHref=${hardyResourcePage.hasNext() ? resourceUrls.list(hardyResourceCategorySlug, hardyResourcePage.page + 1, hardyResourcePage.size) : null}"
+              >
+                <include src="components/resource-pagination.html"></include>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+    </div>
+
+    <nav
+      class="hardy-resource-category-nav"
+      aria-label="资源分类"
+      th:if="${hardyResourceCategories != null and !#lists.isEmpty(hardyResourceCategories)}"
+    >
+      <a
+        class="hardy-resource-category-nav__link"
+        th:each="category : ${hardyResourceCategories}"
+        th:classappend="${hardyResourceCategory?.slug == category.slug} ? ' is-active' : ''"
+        th:href="@{${resourceUrls.list(category.slug, 1, hardyResourcePageSize)}}"
+        th:attr="aria-current=${hardyResourceCategory?.slug == category.slug ? 'page' : null},title=${category.description ?: category.displayName}"
+        th:text="${category.displayName ?: category.slug}"
+      >
+        资源分类
+      </a>
+    </nav>
+  </section>
+</include>

@@ -1,0 +1,178 @@
+<include src="layout.html">
+  <template name="head">
+    <title
+      th:text="|${resourceFolder.displayName ?: resourceFolder.slug ?: '资源文件夹'} - ${site.title}|"
+    >
+      资源文件夹 - Site
+    </title>
+  </template>
+
+  <section
+    class="hardy-list-page hardy-resources-page hardy-resource-folder-page"
+    data-hardy-resource-folder
+  >
+    <nav class="hardy-resource-breadcrumb" aria-label="资源路径">
+      <a class="hardy-resource-breadcrumb__link" th:href="@{${resourceUrls.list()}}">资源中心</a>
+
+      <span class="hardy-resource-breadcrumb__separator" aria-hidden="true">/</span>
+      <span
+        class="hardy-resource-breadcrumb__current"
+        aria-current="page"
+        th:text="${resourceFolder.displayName ?: resourceFolder.slug}"
+        >资源文件夹</span
+      >
+    </nav>
+
+    <header class="hardy-resource-folder-heading">
+      <span class="hardy-resource-folder-heading__icon" aria-hidden="true">
+        <svg class="hardy-icon" viewBox="0 0 24 24">
+          <path
+            d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2h6.5A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"
+          />
+          <path d="M3 9h18" />
+        </svg>
+      </span>
+      <div class="hardy-resource-folder-heading__copy">
+        <p class="hardy-resource-folder-heading__eyebrow">文件夹</p>
+        <h1
+          class="hardy-resource-folder-heading__title"
+          th:text="${resourceFolder.displayName ?: resourceFolder.slug ?: '资源文件夹'}"
+        >
+          资源文件夹
+        </h1>
+      </div>
+    </header>
+
+    <div class="hardy-resource-folder-summary" th:if="${resourceFolder.description}">
+      <p class="hardy-resource-folder-summary__description" th:text="${resourceFolder.description}">
+        文件夹描述
+      </p>
+    </div>
+
+    <section class="hardy-resource-files-section" aria-labelledby="hardy-resource-files-title">
+      <header class="hardy-resource-files-heading">
+        <div>
+          <p class="hardy-resource-files-heading__eyebrow">资料目录</p>
+          <h2 id="hardy-resource-files-title" class="hardy-resource-files-heading__title">文件</h2>
+        </div>
+        <span
+          class="hardy-resource-files-heading__hint"
+          th:if="${resourceFolder.items?.page != null}"
+          th:text="|${resourceFolder.items.page.total} 个文件|"
+          >0 个文件</span
+        >
+      </header>
+
+      <div
+        class="hardy-resource-empty"
+        th:if="${resourceFolder.items == null or resourceFolder.items.items == null or #lists.isEmpty(resourceFolder.items.items)}"
+        th:with="hardyEmptyTitle='该文件夹暂时没有可用文件',hardyEmptyDescription='公开文件上传后会显示在这里。'"
+      >
+        <include src="components/empty-state.html"></include>
+      </div>
+
+      <div
+        class="hardy-resource-file-tree"
+        th:if="${resourceFolder.items != null and resourceFolder.items.items != null and !#lists.isEmpty(resourceFolder.items.items)}"
+      >
+        <div class="hardy-resource-file-tree__root">
+          <span class="hardy-resource-file-tree__root-icon" aria-hidden="true">
+            <svg class="hardy-icon" viewBox="0 0 24 24">
+              <path
+                d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2h6.5A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"
+              />
+              <path d="M3 9h18" />
+            </svg>
+          </span>
+          <span
+            class="hardy-resource-file-tree__root-name"
+            th:text="${resourceFolder.displayName ?: resourceFolder.slug}"
+            >资源文件夹</span
+          >
+        </div>
+
+        <ul class="hardy-resource-file-list">
+          <li
+            class="hardy-resource-file-row"
+            th:each="item : ${resourceFolder.items.items}"
+            th:id="|hardy-resource-item-${item.id}|"
+            th:attr="data-resource-item-id=${item.id},data-resource-media-type=${item.mediaType ?: ''},data-resource-file-name=${item.displayName ?: item.id}"
+          >
+            <span class="hardy-resource-file-row__branch" aria-hidden="true"></span>
+            <span class="hardy-resource-file-row__icon" aria-hidden="true">
+              <svg
+                class="hardy-icon hardy-resource-file-icon hardy-resource-file-icon--file"
+                viewBox="0 0 24 24"
+              >
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <path d="M14 2v6h6M8 13h8M8 17h5" />
+              </svg>
+              <svg
+                class="hardy-icon hardy-resource-file-icon hardy-resource-file-icon--pdf"
+                viewBox="0 0 24 24"
+              >
+                <path d="M6 3h8l4 4v14H6zM14 3v5h5" />
+                <path d="M8 16h8M8 19h5" />
+              </svg>
+              <svg
+                class="hardy-icon hardy-resource-file-icon hardy-resource-file-icon--archive"
+                viewBox="0 0 24 24"
+              >
+                <path d="M4 7h16v13H4zM4 7l2-3h12l2 3" />
+                <path d="M10 4v3M10 10v2M10 15v2M14 10h2" />
+              </svg>
+              <svg
+                class="hardy-icon hardy-resource-file-icon hardy-resource-file-icon--image"
+                viewBox="0 0 24 24"
+              >
+                <rect x="3" y="4" width="18" height="16" rx="2" />
+                <circle cx="8.5" cy="9" r="1.5" />
+                <path d="m4 17 5-5 3 3 2-2 6 6" />
+              </svg>
+            </span>
+            <div class="hardy-resource-file-row__body">
+              <a
+                class="hardy-resource-file-row__name"
+                th:if="${item.downloadUrl}"
+                th:href="@{${item.downloadUrl}}"
+                th:text="${item.displayName ?: item.id}"
+                th:attr="aria-label=|下载 ${item.displayName ?: item.id}|"
+                >文件</a
+              >
+              <span
+                class="hardy-resource-file-row__name"
+                th:unless="${item.downloadUrl}"
+                th:text="${item.displayName ?: item.id}"
+                >文件</span
+              >
+              <p
+                class="hardy-resource-file-row__description"
+                th:if="${item.description}"
+                th:text="${item.description}"
+              >
+                文件描述
+              </p>
+              <span
+                class="hardy-resource-file-row__size"
+                th:if="${item.size != null}"
+                th:text="|${item.size} B|"
+                >0 B</span
+              >
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <div
+      th:if="${resourceFolder.items?.page != null}"
+      th:with="hardyResourcePage=${resourceFolder.items.page}"
+    >
+      <div
+        th:with="hardyResourcePreviousHref=${hardyResourcePage.hasPrevious() ? resourceUrls.folder(resourceFolder.slug, hardyResourcePage.page - 1, hardyResourcePage.size) : null},hardyResourceNextHref=${hardyResourcePage.hasNext() ? resourceUrls.folder(resourceFolder.slug, hardyResourcePage.page + 1, hardyResourcePage.size) : null}"
+      >
+        <include src="components/resource-pagination.html"></include>
+      </div>
+    </div>
+  </section>
+</include>
