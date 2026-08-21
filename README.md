@@ -31,7 +31,7 @@ pnpm dev
 
 ## 当前状态
 
-主题当前以 `0.1.0` 作为个人测试版。已在 Halo `2.25.4` 测试站验证核心列表、文章、独立页面、作者和已启用的 Moments、Links、Photos 路由；`theme.yaml` 中的 `>=2.0.0` 下限尚未在 Halo `2.0.0` 实例上实机验证，不应视为已完成的兼容性证明。核心和插件路由已完成 390/768/1024/1280/1920px 的结构响应式检查。
+主题当前版本为 `0.1.13`。已在 Halo `2.25.4` 测试站验证核心列表、文章、独立页面、作者和已启用的 Moments、Links、Photos 路由；`theme.yaml` 中的 `>=2.0.0` 下限尚未在 Halo `2.0.0` 实例上实机验证，不应视为已完成的兼容性证明。核心和插件路由已完成 390/768/1024/1280/1920px 的结构响应式检查。
 
 已验证的可选插件包括 Search Widget、Comment Widget、Moments、Links 和 Photos。Shiki 代码块与 KaTeX MathML fixture 已在前台观察到；hyperlink-card 和插件缺失态仍在持续验证。插件未安装时，主题会隐藏依赖其能力的入口或保留核心内容布局。
 
@@ -57,12 +57,14 @@ pnpm dev
 ## 升级
 
 运行 `pnpm build` 后，在 Halo Console 的“主题管理 → 上传安装 / 升级”上传
-`dist/theme-hardy-0.1.0.zip` 并确认升级。该版本没有 settings 或 annotation 字段迁移；已有
+`dist/theme-hardy-0.1.13.zip` 并确认升级。该版本没有 settings 或 annotation 字段迁移；已有
 `theme-hardy-setting` 与 `theme-hardy-configMap` 配置可直接保留。旧版的 `basic.social_github`、`basic.social_email`、`basic.social_website` 仍会在未填写新版社交链接时作为兼容回退；后续可在“社交链接”页签中重新保存。升级后运行：
 
 ```bash
 HALO_TEST_BASE_URL=https://your-halo.example pnpm test:smoke
 ```
+
+超级管理员可从 `/archives` 右上角进入新建文章链接，也可从每篇文章标题右侧的铅笔图标进入编辑。两者共用主题“基础设置”的 `new_post_url`；编辑入口会自动追加 `?name=<文章 metadata.name>`。留空时回退到 Halo Console 的 `/console/posts/editor`，主题不提供单独的文章工作台。
 
 ## 视觉样本
 

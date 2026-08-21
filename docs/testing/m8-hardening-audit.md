@@ -28,10 +28,26 @@ The browser bundle contains one first-party entry and no page-specific JavaScrip
 events are passive; optional feature initializers return when their hooks are absent. Color mode,
 TOC, media fallback, and menu initializers are guarded against repeated initialization.
 
+The 2026-08-07 publish-latency follow-up tightened the server-rendering budget. Generated route
+templates now contain one `menuFinder.getPrimary()` call and one
+`pluginFinder.available('PluginSearchWidget')` call each, shared by all shell variants. Moment
+list items no longer instantiate comment widgets; the detail route owns the single Moment comment
+extension point. Internal links use native navigation without the former fixed 220 ms delay and
+page-wide pointer lock. `pnpm test:hardening` enforces these three contracts.
+
+The post-fix production build contains `main-CXh7CUUr.js` at 15.01 kB raw / 5.47 kB gzip and
+`main-C_62XAOO.css` at 45.70 kB raw / 8.07 kB gzip. The packaged `theme-hardy-0.1.11.zip` is
+109,744 bytes. All 14 generated route templates contain exactly one shared menu Finder call and
+one shared Search Widget capability check.
+
 The post-build package inventory was rechecked on 2026-08-07. The ZIP contains the generated
 templates, hashed assets, theme metadata, settings, README, and license only; it contains no
 `src/`, `node_modules/`, `research/`, fixture data, screenshots, `pnpm-workspace.yaml`, or
 credentials.
+
+Package staging derives its HTML allowlist from the top-level source templates in `src/` and copies
+only those generated templates plus the current asset directory. Stale generated HTML left in
+`templates/` cannot enter the release ZIP.
 
 A clean-install check was also completed in an isolated temporary directory with `pnpm@10.33.0`
 and `pnpm install --frozen-lockfile`. The clean tree installed 158 packages, passed `pnpm build`,

@@ -105,7 +105,7 @@ Create stable CSS, TypeScript, naming, and import boundaries before implementing
 - [x] **M1.2 Define the semantic token system.**
   - Add `--hardy-*` tokens for background, surface, primary text, muted text, borders, accent, focus, spacing, radii, motion, shell width, sidebar ratio, and content measure.
   - Provide light and dark token sets.
-  - Keep reference measurements as layout constants: `1400px` shell max, `768px` list breakpoint, and `1024px` shell breakpoint.
+  - Keep reference measurements as layout constants: `1400px` shell max, `768px` list breakpoint, and `900px` shell breakpoint. The lower shell threshold keeps common zoomed desktop windows in the desktop layout.
   - Avoid encoding individual page names into tokens.
 
 - [x] **M1.3 Establish base element behavior.**
@@ -162,28 +162,34 @@ Implement the shared document shell and the observable desktop/mobile navigation
   - Social links come from a stable configuration source or menu annotations only after that contract is defined; do not hard-code reference accounts.
 
 - [x] **M2.3 Build the mobile header and menu drawer.**
-  - 68px fixed header below `1024px`.
+  - 68px fixed header below `900px`.
   - 320px drawer, full-viewport mask, close control, and measured content offset transition.
   - Use buttons for menu commands, ARIA relationships, focus trap, Escape handling, mask click, and focus restoration.
   - Prevent incoherent background interaction while the drawer is open.
 
 - [x] **M2.4 Build the footer.**
-  - Site copyright, optional custom footer, optional filing/custom links only when backed by settings or Halo data.
+  - Site copyright, optional custom footer, configurable live site runtime, Halo site-wide visit count, and optional filing/custom links only when backed by settings or Halo data.
   - Keep `<halo:footer />` inside the shared shell.
   - Maintain full-width footer behavior outside the 1400px content shell if required by the measured layout.
 
-- [x] **M2.5 Implement color-scheme behavior.**
+- [x] **M2.5 Add the archive authoring shortcut.**
+  - Render a server-authorized new-post link beside the archive heading only for Halo's super administrator; use the configurable `basic.new_post_url` setting and fall back to Halo Console's `/console/posts/editor` route.
+  - Render a matching server-authorized edit link beside each archive title, appending the post `metadata.name` to the configured authoring base.
+  - Keep article creation, metadata, editor selection, autosave, media, and publishing owned by the configured authoring surface; the theme does not create drafts or provide a second authoring surface.
+
+- [x] **M2.6 Implement color-scheme behavior.**
   - Add `appearance.color_scheme` with `auto`, `light`, and `dark` defaults only when the UI consumes it.
   - Apply state early, synchronize the toggle, listen to system changes only in auto mode, and update `data-color-scheme` for plugins.
   - Decide and document persistence precedence between theme default and local user choice.
 
-- [x] **M2.6 Implement scroll-to-top.**
+- [x] **M2.7 Implement scroll-to-top.**
   - Passive scroll detection, visibility threshold, 48px accessible button, smooth/reduced motion behavior, and no work when absent.
 
-- [x] **M2.7 Add shell interaction tests.**
+- [x] **M2.8 Add shell interaction tests.**
   - Drawer open/close by trigger, mask, Escape, and breakpoint transition.
   - Focus restoration and background interaction prevention.
   - Auto/light/dark behavior and plugin-facing root attribute.
+  - Keep the CSS desktop-shell media queries and mobile-menu `matchMedia` query synchronized at the declared `900px` shell breakpoint.
   - Scroll-to-top visibility and activation.
 
 ### Files
@@ -298,7 +304,7 @@ Build a robust content shell for Halo-rendered HTML and accessible article inter
 ### Tasks
 
 - [x] **M5.1 Build detail header and metadata components.**
-  - 30/36px title, publish date, taxonomies, verified statistics, and authorized actions only when the contract exists.
+  - 30/36px title, post-detail publish timestamp with second precision, taxonomies, verified statistics, and authorized actions only when the contract exists.
   - Long-title wrapping must not shift action controls over content.
 
 - [x] **M5.2 Build the scoped prose system.**
@@ -318,7 +324,8 @@ Build a robust content shell for Halo-rendered HTML and accessible article inter
 
 - [x] **M5.5 Implement TOC.**
   - Use existing rendered heading IDs.
-  - Desktop only at `>=1024px`, active heading through `IntersectionObserver`, graceful fallback, keyboard navigation, and no content mutation.
+  - Desktop only at `>=900px`, active heading through `IntersectionObserver`, graceful fallback, keyboard navigation, and no content mutation.
+  - Post detail routes use the desktop sidebar for a nested H2-H4 TOC with reference-matched hover/active transitions; introduction, social links, and primary navigation are omitted there.
   - Test duplicate headings, no headings, one heading, H2/H3 hierarchy, and encoded IDs.
 
 - [x] **M5.6 Implement sharing.**
@@ -409,6 +416,9 @@ No plugin proceeds past this gate using only the reference site's rendered HTML 
 - [x] **M7.2 Implement Moments second.**
   - Source list/detail templates and capability guard are present; one populated list/detail fixture and comment host are verified. Media variants and absent/disabled states remain pending.
   - RSS action, tag filters/counts, rich moment content, pagination, date, and verified upvote/comment/share behavior.
+  - The list links comment counts to the detail route; only the detail route instantiates the Moment comment widget, preventing one plugin widget per list item.
+  - Additive `moments.cover_image` setting provides an optional backend-managed cover for the Moments information flow and has an empty-state fallback.
+  - Authenticated visitors can open the publish dialog, upload an image through Halo's UC attachment endpoint, and create a Moment through the plugin UC API; anonymous visitors do not receive the publish control.
   - Validate `moment.halo.run / Moment` against current plugin documentation before using it.
   - Handle images, code, no tags, multiple tags, deleted media, and long discussions.
 
@@ -455,6 +465,8 @@ Turn the completed feature set into a dependable release candidate.
 - [x] **M8.4 Audit performance.**
   - Bundle size, duplicate CSS, render-blocking resources, responsive image use, layout shift, passive events, observer cleanup, and unnecessary per-page JavaScript.
   - Set release budgets after the first complete baseline; budget increases require a documented reason.
+  - [x] Shared shell data is bound once per render: one primary-menu Finder call and one Search Widget capability check across desktop, mobile, and no-JavaScript variants.
+  - [x] Moment comment widgets render only on the detail route, and native internal-link navigation starts without an artificial timeout or page-wide interaction lock.
 
 - [ ] **M8.5 Audit compatibility.**
   - Run the recorded minimum and latest Halo versions.
@@ -475,7 +487,7 @@ Turn the completed feature set into a dependable release candidate.
 
 - Static, build, runtime, interaction, visual, accessibility, plugin, compatibility, and package gates pass.
 - Remaining limitations are documented and accepted.
-- Version is updated only after the release contents are fixed.
+- Version is updated only after the release contents are fixed; each delivered theme update increments the patch version by `0.0.1`.
 
 ## 12. Cross-Cutting Test Matrix
 

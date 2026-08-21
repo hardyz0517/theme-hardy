@@ -35,6 +35,10 @@ Pages compose a single layout partial. The layout owns the document shell and ex
 
 Use the Vite plugin's build-time includes only for structural composition. Do not mix build-time include semantics with Thymeleaf fragment syntax in the same responsibility.
 
+The shared layout binds the primary menu, common theme-setting groups, and global plugin capability checks once per render. Desktop, mobile, and no-JavaScript shell variants consume those bound values; they must not repeat Finder calls in their partials.
+
+On desktop, the sidebar remains sticky at the shell's 28px top inset while the main column scrolls. Its containing shell is the sticky boundary, so the footer pushes the sidebar upward instead of being covered by it.
+
 ### 2.3 Client architecture
 
 Use vanilla TypeScript modules with small feature initializers, not a client framework. `src/js/main.ts` is the only browser entry imported by the global layout. It calls feature initializers in a deterministic order and catches failures per feature so a broken optional enhancement cannot disable navigation or content.
@@ -161,13 +165,17 @@ Every list page must render a useful empty state, not an empty `<ul>`. Missing c
 
 Settings are grouped by stable user intent:
 
-- `basic`: custom footer text and the global social-links visibility switch. Legacy `social_github`, `social_email`, and `social_website` values remain valid as a read fallback.
+- `basic`: custom footer text, optional site start time for the live footer runtime, configurable new-post URL, and the global social-links visibility switch. The footer also renders Halo's site-wide visit total through `siteStatsFinder`. Legacy `social_github`, `social_email`, and `social_website` values remain valid as a read fallback.
 - `profile`: optional sidebar avatar, display name, and one-line introduction. Empty values fall back to the corresponding site identity values.
+- `moments`: optional top cover image for the Moments information flow. It is rendered only when configured and is omitted without leaving an empty banner.
+- The Moments page exposes an authenticated publish dialog backed by the plugin's UC create endpoint. Unauthenticated visitors receive a clear sign-in message; the theme does not invent a public mutation endpoint.
 - `social`: optional GitHub, Luogu, QQ number, email, Twitter / X, Bilibili, Weibo, Zhihu, WeChat QR image, YouTube, Xiaohongshu, and personal-site links. Empty values are omitted from the desktop sidebar; the WeChat image is exposed as a link instead of being eagerly rendered, and a QQ number is converted to a Tencent contact URL.
 - `appearance`: color scheme and motion preference.
 - `layout`: sidebar visibility and list presentation only when both modes are implemented.
 - `post`: table of contents, cover visibility, and detail-page actions only when consumed.
 - `integrations`: opt-in visual adaptations for installed plugins, never credentials or API endpoints.
+
+The archive heading exposes a server-authorized “新建文章” link only to Halo's `super-role`. It uses `theme.config.basic.new_post_url` when configured and falls back to Halo Console's `/console/posts/editor` route. Each archive title also exposes a matching edit link that appends `name=post.metadata.name` to that base. The theme does not create drafts, store authoring state, or render a second article editor; the selected authoring surface owns article metadata, editor selection, formulas, media, autosave, and publishing.
 
 Defaults must preserve a usable theme on a fresh install. New fields are additive; renaming a group or field is a migration event and requires a release note and a compatibility test. Annotation settings are reserved for real per-post, per-page, category, tag, or menu-item data that cannot be represented by global settings; all annotation values must remain strings and names must use a Hardy-specific prefix.
 
@@ -199,7 +207,7 @@ Light and dark themes override the same semantic variables through the root colo
 - Keep layout selectors separate from content selectors.
 - Avoid global styling of custom elements, `img`, `button`, or `a` that can leak into plugin widgets.
 - Scope rendered article CSS below `.hardy-prose`.
-- Preserve the measured breakpoints: `768px` for post-card orientation and `1024px` for the desktop shell.
+- Preserve the measured `768px` post-card orientation breakpoint and use `900px` for the desktop shell so common desktop browser zoom levels do not incorrectly activate the mobile shell.
 - Use stable `aspect-ratio`, `min-height`, grid tracks, and reserved image dimensions to prevent layout shifts.
 - Include reduced-motion rules and visible keyboard focus styles.
 
@@ -212,7 +220,7 @@ Plugin integration is capability-based and isolated. The template checks `plugin
 | Capability             | First implementation                                                                                                                                                                                                                                                 |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Search                 | Render a Hardy icon button only when `PluginSearchWidget` is available; call the official `SearchWidget.open()` API.                                                                                                                                                 |
-| Comments               | Use `haloCommentEnabled` and `<halo:comment>` for `Post` and `SinglePage`; keep the host container stable for the plugin.                                                                                                                                            |
+| Comments               | Use `haloCommentEnabled` and `<halo:comment>` for `Post`, `SinglePage`, and verified optional resource identities; keep one stable host per detail page and never instantiate comment widgets inside a list loop.                                                    |
 | Footer injection       | Keep `<halo:footer />` before the closing body boundary through the shared footer partial.                                                                                                                                                                           |
 | Color scheme           | Set the root `data-color-scheme` and keep plugin UI in the same mode.                                                                                                                                                                                                |
 | Rich content           | Style the prose boundary without replacing Shiki, hyperlink-card, image-viewer, or AI-assistant custom elements.                                                                                                                                                     |
@@ -234,7 +242,7 @@ Persistence precedence is: a valid local user choice in `localStorage["hardy:col
 
 ### Page entry animation
 
-The reference MHTML uses element-level Animate.css-style entry effects rather than a full-page wipe: shared shell elements use a one-second opacity fade with short staggered delays, archive dates enter with a downward fade, and reduced-motion preferences collapse the animation duration. Hardy keeps a short internal-link fade-out and applies the same element-level fade-in treatment on the next page.
+The reference MHTML uses element-level Animate.css-style entry effects rather than a full-page wipe: shared shell elements use a one-second opacity fade with short staggered delays, archive dates enter with a downward fade, and reduced-motion preferences collapse the animation duration. Hardy applies the element-level entry treatment without delaying or intercepting native internal-link navigation.
 
 ### Scroll-to-top
 
@@ -242,7 +250,7 @@ Use a passive scroll listener, a visibility threshold, a keyboard-accessible ico
 
 ### Table of contents
 
-Build from rendered heading IDs only after the content exists. Use `IntersectionObserver` when available, fall back to a stable active state, and avoid rewriting heading IDs supplied by Halo. Hide the table of contents below the desktop breakpoint.
+Build from rendered heading IDs only after the content exists. Use `IntersectionObserver` when available, fall back to a stable active state, and avoid rewriting heading IDs supplied by Halo. Hide the table of contents below the desktop breakpoint. On Post detail routes, the desktop sidebar keeps the avatar and identity title, replaces the introduction, social links, and primary navigation with a nested H2-H4 table of contents, and keeps the active entry visible inside a scrolling sidebar.
 
 ### Share
 

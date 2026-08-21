@@ -8,15 +8,17 @@ This is the field and API allow-list for Hardy's core templates. Template code m
 
 ## Global Context
 
-| Context                        | Hardy usage                                                                               | Notes                                                                                        |
-| ------------------------------ | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `site`                         | `title`, `subtitle`, `logo`                                                               | `logo` and `subtitle` can be empty; the shell must retain a useful fallback.                 |
-| `theme`                        | `config.basic.custom_footer`, future settings declared in `settings.yaml`                 | A `theme.config` lookup is valid only when its matching FormKit field exists.                |
-| `menuFinder.getPrimary()`      | `menu.menuItems`, `item.status.displayName`, `item.status.href`, `item.spec.target.value` | A primary menu can have no items. Use `status.*`, not raw `spec.displayName` or `spec.href`. |
-| `pluginFinder.available(name)` | Capability guards for official and optional plugins                                       | Returns true only when a plugin is installed and enabled.                                    |
-| `haloCommentEnabled`           | Guard the comment host                                                                    | It combines page comment enablement and installed comment capability.                        |
+| Context                        | Hardy usage                                                                                                                            | Notes                                                                                        |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `site`                         | `title`, `subtitle`, `logo`                                                                                                            | `logo` and `subtitle` can be empty; the shell must retain a useful fallback.                 |
+| `theme`                        | `config.basic.custom_footer`, `config.basic.site_start_time`, `config.basic.new_post_url`, future settings declared in `settings.yaml` | A `theme.config` lookup is valid only when its matching FormKit field exists.                |
+| `menuFinder.getPrimary()`      | `menu.menuItems`, `item.status.displayName`, `item.status.href`, `item.spec.target.value`                                              | A primary menu can have no items. Use `status.*`, not raw `spec.displayName` or `spec.href`. |
+| `siteStatsFinder.getStats()`   | `visit`                                                                                                                                | Supplies the site-wide visit total shown in the shared footer.                               |
+| `pluginFinder.available(name)` | Capability guards for official and optional plugins                                                                                    | Returns true only when a plugin is installed and enabled.                                    |
+| `haloCommentEnabled`           | Guard the comment host                                                                                                                 | It combines page comment enablement and installed comment capability.                        |
+| `sec:authorize`                | `hasRole('super-role')` on archive-page new-post and edit links                                                                        | Server-side Spring Security dialect; only the Halo super administrator receives these links. |
 
-Sources: [global variables](https://github.com/halo-dev/docs/blob/b466520ff9f8cfbbfa2ea6547d2154f5f24bd94b/docs/developer-guide/theme/global-variables.md), [menu finder](https://github.com/halo-dev/docs/blob/b466520ff9f8cfbbfa2ea6547d2154f5f24bd94b/docs/developer-guide/theme/finder-apis/menu.md), and [plugin finder](https://github.com/halo-dev/docs/blob/b466520ff9f8cfbbfa2ea6547d2154f5f24bd94b/docs/developer-guide/theme/finder-apis/plugin.md).
+Sources: [global variables](https://github.com/halo-dev/docs/blob/b466520ff9f8cfbbfa2ea6547d2154f5f24bd94b/docs/developer-guide/theme/global-variables.md), [menu finder](https://github.com/halo-dev/docs/blob/b466520ff9f8cfbbfa2ea6547d2154f5f24bd94b/docs/developer-guide/theme/finder-apis/menu.md), [site statistics finder](https://github.com/halo-dev/docs/blob/b466520ff9f8cfbbfa2ea6547d2154f5f24bd94b/docs/developer-guide/theme/finder-apis/site-stats.md), and [plugin finder](https://github.com/halo-dev/docs/blob/b466520ff9f8cfbbfa2ea6547d2154f5f24bd94b/docs/developer-guide/theme/finder-apis/plugin.md).
 
 ## Route Context
 
@@ -77,6 +79,8 @@ Sources: [listed post](https://github.com/halo-dev/docs/blob/b466520ff9f8cfbbfa2
 - Search UI is emitted only when `pluginFinder.available('PluginSearchWidget')`; the button delegates to `SearchWidget.open()`.
 - Post comments use `halo:comment` with `group="content.halo.run"`, `kind="Post"`, and `name=post.metadata.name` behind `haloCommentEnabled`.
 - Single-page comments use the same group with `kind="SinglePage"` and `name=singlePage.metadata.name`.
+- The archive page's new-post action uses `sec:authorize="hasRole('super-role')"` and opens the configured `theme.config.basic.new_post_url`, falling back to Halo Console's `/console/posts/editor` route. Article creation, metadata, editor selection, snapshots, formulas, media, autosave, and publishing remain owned by the selected authoring surface.
+- Each archive post's edit action uses the same configured authoring base and appends `name=post.metadata.name`; it is rendered only for `super-role` users and leaves post mutation to the linked authoring surface.
 - The shared shell always retains `<halo:footer />` before `</body>`.
 - The root has `data-color-scheme="auto|light|dark"` so official plugin UI can match Hardy's active mode.
 
@@ -84,4 +88,4 @@ Sources: [post finder](https://github.com/halo-dev/docs/blob/b466520ff9f8cfbbfa2
 
 ## Deliberately Deferred Contracts
 
-Links, Moments, Photos, upvotes, authorized edit actions, rich-content plugins, and their comments remain outside this core contract. Their plugin name, template route, Finder methods, model fields, and resource identities must be separately verified against installed plugin documentation and a populated local fixture before Hardy renders them.
+Links, Moments, Photos, upvotes, rich-content plugins, and their comments remain outside this core contract. Their plugin name, template route, Finder methods, model fields, and resource identities must be separately verified against installed plugin documentation and a populated local fixture before Hardy renders them.

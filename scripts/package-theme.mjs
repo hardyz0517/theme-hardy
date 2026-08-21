@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { cp, mkdtemp, readFile, rm, mkdir, copyFile } from "node:fs/promises";
+import { copyFile, cp, mkdir, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -18,7 +18,19 @@ const run = (command, args, options) =>
   });
 
 try {
-  await cp(join(root, "templates"), join(staging, "templates"), { recursive: true });
+  const sourceTemplates = (await readdir(join(root, "src"), { withFileTypes: true }))
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".html"))
+    .map((entry) => entry.name);
+  const stagedTemplates = join(staging, "templates");
+  await mkdir(stagedTemplates, { recursive: true });
+  await Promise.all(
+    sourceTemplates.map((name) =>
+      copyFile(join(root, "templates", name), join(stagedTemplates, name)),
+    ),
+  );
+  await cp(join(root, "templates", "assets"), join(stagedTemplates, "assets"), {
+    recursive: true,
+  });
   for (const file of ["theme.yaml", "settings.yaml", "README.md", "LICENSE"]) {
     await copyFile(join(root, file), join(staging, file));
   }
